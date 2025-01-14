@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// El archivo .hpp contiene la "declaracion" de las funciones.
+
 #pragma once
 
 #include <iostream>

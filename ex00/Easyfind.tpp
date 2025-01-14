@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// El archivo .tpp contiene la "implementacion" de las funciones.
+
 #include "Easyfind.hpp"
 
 template <typename T>
