@@ -1,5 +1,5 @@
 NAME =	easyfind
-SRCS =	main.cpp Easyfind.hpp Easyfind.tpp
+SRCS =	main.cpp
 OBJS =	$(SRCS:.cpp=.o)
 CPP98 =	g++ -g -Wall -Wextra -Werror -std=c++98
 

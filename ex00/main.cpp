@@ -6,43 +6,34 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 19:13:57 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/14 15:19:33 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:10:52 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Easyfind.hpp"
 
-int main()
-{
-    std::vector<int> vec;
-    vec.push_back(1);
-    vec.push_back(2);
-    vec.push_back(3);
-    vec.push_back(4);
-    vec.push_back(5);
-    vec.push_back(6);
-    vec.push_back(7);
-    vec.push_back(8);
-    vec.push_back(9);
-    vec.push_back(10);
-
-    try
-    {
-        std::cout << *easyfind(vec, 5) << std::endl;
+int main() {
+    std::vector<int> container01;
+    std::vector<int> container02;
+    for (int i = 0; i < 10; i++) {
+        container01.push_back(i);
+        container02.push_back(i);
     }
-    catch (std::exception &e)
-    {
+    int searching01 = 6;
+    int searching02 = 42;
+    std::cout << "Searching in container01..." << std::endl;
+    try {
+        *easyfind(container01, searching01);
+        std::cout << "Found it! It's position in container01 is number " << *easyfind(container01, searching01) << std::endl;
+    } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }
-
-    try
-    {
-        std::cout << *easyfind(vec, 11) << std::endl;
-    }
-    catch (std::exception &e)
-    {
+    std::cout << "Searching in container02..." << std::endl;
+    try {
+        *easyfind(container02, searching02);
+        std::cout << "Found it! It's position in container02 is number " << *easyfind(container02, searching02) << std::endl;
+    } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }
-
     return 0;
 }
