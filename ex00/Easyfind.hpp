@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:47:06 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/16 12:09:04 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:28:10 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iostream>		// std
 #include <algorithm>	// find
 #include <vector>		// vector
+#include <deque>		// deque
 
 template <typename T>
 typename T::iterator easyfind(T &container, int number);

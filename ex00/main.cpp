@@ -6,14 +6,14 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 19:13:57 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/16 13:10:52 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:28:17 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Easyfind.hpp"
 
 int main() {
-    std::vector<int> container01;
+    std::deque<int> container01;
     std::vector<int> container02;
     for (int i = 0; i < 10; i++) {
         container01.push_back(i);
