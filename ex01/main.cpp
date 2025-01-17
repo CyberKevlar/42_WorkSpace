@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 19:13:57 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/17 16:04:32 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:27:59 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,6 @@ int main() {
     catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }
+
+    return 0;
 }
