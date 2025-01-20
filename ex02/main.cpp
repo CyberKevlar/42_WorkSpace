@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:45:59 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/20 14:35:23 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:59:17 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,17 @@ int main()
         std::cout << *itStart << std::endl;
         ++itStart;
     }
-    
-    std::stack<int> s(mstack);
 
-    std::cout << "The new stack 's' should have the same like 'mstack' but without iterators." << std::endl;
-    std::cout << "The last number in 's' stack is " << s.top() << std::endl;
-    std::cout << "The size of 's' stack is " << s.size() << std::endl;
+    std::cout << "And now a example with lists!" << std::endl;
+    
+    std::list<int> s(mstack.begin(), mstack.end());
+    std::list<int>::iterator sStart = s.begin();
+
+    while (sStart != s.end())
+    {
+        std::cout << *sStart << std::endl;
+        ++sStart;
+    }
     
     return 0;
 }

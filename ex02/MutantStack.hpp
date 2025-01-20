@@ -6,13 +6,14 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:43:26 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/20 14:32:24 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:52:51 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
+#include <list>
 #include <stack>
 
 
