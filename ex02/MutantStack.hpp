@@ -6,34 +6,51 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:43:26 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/17 16:50:20 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:32:24 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MUTANTSTACK_HPP
-#define MUTANTSTACK_HPP
+#pragma once
 
 #include <iostream>
 #include <stack>
 
-class MutantStack : public std::stack<int>
+
+template <typename T>
+class MutantStack : public std::stack<T>
 {
-private:
-    /* data */
-public:
-    MutantStack : public std::stack<int>(/* args */);
-    ~MutantStack : public std::stack<int>();
+    private:
+    public:
+        /* Alias para usar unicamente 'iterator'*/
+        typedef typename std::stack<T>::container_type::iterator iterator;
+
+        /* Metodos obligatorios para la clase canonica ortodoxa */
+        MutantStack() {
+            std::cout << "[ Default constructor called! ]" << std::endl;
+        }
+        ~MutantStack() {
+            std::cout << "[ Destructor called! ]" << std::endl;
+        }
+        MutantStack(const MutantStack &src) {
+            std::cout << "[ Copy constructor called! ]" << std::endl;
+            *this = src;
+        };
+        MutantStack &operator=(const MutantStack &src) {
+            std::cout << "[ Overload assignation operator called! ]" << std::endl;
+            if (this != &src) {
+                this->c = src.c;
+            }
+            else {
+                std::cout << "[ Same info. Copy abort! ]" << std::endl;
+            }
+            return (*this);
+        };
+    
+        /* Iteradores */
+        iterator begin() {
+            return (this->c.begin());
+        }
+        iterator end() {
+            return (this->c.end());
+        }
 };
-
-MutantStack : public std::stack<int>::MutantStack : public std::stack<int>(/* args */)
-{
-}
-
-MutantStack : public std::stack<int>::~MutantStack : public std::stack<int>()
-{
-}
-
-
-#include "MutantStack.tpp"
-
-#endif

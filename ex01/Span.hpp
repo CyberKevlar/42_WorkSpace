@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:47:06 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/17 14:12:19 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:19:36 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ class Span {
         unsigned int _position;                                     // POSICION ACTUAL DEL ITERADOR (PONEMOS UNSIGNED INT PARA QUE NO DE PROBLEMAS AL COMPARARLO CON SIZE).
         std::vector<int> _storage;                                  // VECTOR DE ALMACENAMIENTO DE NUMEROS.
     public:                 
-        Span();                                                     // CONSTRUCTOR (OBLIGATORIO).
+        Span();                                                     // (OBLIGATORIO) CONSTRUCTOR.
         Span(unsigned int N_);                  
-        Span(const Span &src);                                      // CONSTRUCTOR DE COPIA (OBLIGATORIO).
-        ~Span();                                                    // DESTRUCTOR (OBLIGATORIO).
-        Span    &operator=(const Span &src);                        // SOBRECARGA DEL OPERADOR DE ASIGNACION (OBLIGATORIO).
+        Span(const Span &src);                                      // (OBLIGATORIO) CONSTRUCTOR DE COPIA.
+        ~Span();                                                    // (OBLIGATORIO) DESTRUCTOR.
+        Span    &operator=(const Span &src);                        // (OBLIGATORIO) SOBRECARGA DEL OPERADOR DE ASIGNACION.
         void    addNumber(int number_);
         int     shortestSpan();                                     // ESTA FUNCION CALCULA LA DISTANCIA ENTRE LOS DOS NUMEROS MAS CERCANOS.
         int     longestSpan();                                      // ESTA FUNCION CALCULA LA DISTANCIA ENTRE EL NUMERO MAS PEQUEÑO Y EL MAS GRANDE.
