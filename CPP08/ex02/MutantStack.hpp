@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:43:26 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/20 14:52:51 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:23:45 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ class MutantStack : public std::stack<T>
         ~MutantStack() {
             std::cout << "[ Destructor called! ]" << std::endl;
         }
-        MutantStack(const MutantStack &src) {
+        MutantStack(const MutantStack &copy) {
             std::cout << "[ Copy constructor called! ]" << std::endl;
-            *this = src;
+            *this = copy;
         };
         MutantStack &operator=(const MutantStack &src) {
             std::cout << "[ Overload assignation operator called! ]" << std::endl;

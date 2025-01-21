@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:47:06 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/20 11:19:36 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:23:10 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Span {
     public:                 
         Span();                                                     // (OBLIGATORIO) CONSTRUCTOR.
         Span(unsigned int N_);                  
-        Span(const Span &src);                                      // (OBLIGATORIO) CONSTRUCTOR DE COPIA.
+        Span(const Span &copy);                                     // (OBLIGATORIO) CONSTRUCTOR DE COPIA.
         ~Span();                                                    // (OBLIGATORIO) DESTRUCTOR.
         Span    &operator=(const Span &src);                        // (OBLIGATORIO) SOBRECARGA DEL OPERADOR DE ASIGNACION.
         void    addNumber(int number_);
