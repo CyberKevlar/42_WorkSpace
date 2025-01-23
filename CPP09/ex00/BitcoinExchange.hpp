@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:12 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/21 16:45:39 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:20:54 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,22 @@
 
 class BitcoinExchange
 {
+    /* Alias para el container (simple ahorro gramatical para el .hpp y .cpp). */
+    typedef std::map<std::string, double> container;
+    /* Atributos privados. */
     private:
         std::map<std::string, double> _storage;
+    /* Atributos publicos. */
     public:
         BitcoinExchange();
         ~BitcoinExchange();
         BitcoinExchange(const BitcoinExchange &copy);
         BitcoinExchange &operator=(const BitcoinExchange &src);
 
+        container getter();
         void setter(std::string &date, double &value);
         void reading(std::string file);
+        void processing(std::string file);
         
         class NegativeNumberException : public std::exception {
             public:
