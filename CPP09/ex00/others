@@ -1,0 +1,48 @@
+void BitcoinExchange::processing(std::string input) {
+        // 1. Abrimos el archivo que vamos a comparar.
+    std::ifstream file;
+    file.open(input.c_str());
+    if (!file) {
+        std::cout << "Error: could not open file." << std::endl;
+        return ;
+    }
+        // 2. Creamos un objeto 'struct tm' para almacenar la fecha deseccionada, y lo inicializamos todo a 0.
+    struct tm tm;
+    std::memset(&tm, 0, sizeof(struct tm));
+        // 3. Creamos un contenedor para almacenar los valores.
+    container tmp_map;
+    std::string line;
+    std::string date;
+    double value;
+        // 4. Leemos el archivo linea por linea.
+    while (std::getline(file, line)) {
+        std::istringstream new_line(line);
+        if (std::getline(new_line, date, '|')) {
+            new_line >> value;
+                // 5. Parseamos la fecha con una funcion, ya que std::get_time no esta permitido/disponible en la C++98.
+            try {
+            parseDate(date, &tm);
+            //std::cout << "Date: " << tm.tm_year << "-" << tm.tm_mon << "-" << tm.tm_mday << std::endl;
+            std::string modDate = date;
+            tmp_map[modDate] = value;
+            }
+            catch (std::exception &e) {
+                std::cout << e.what() << std::endl;
+            }
+        }
+        //std::cout << "DEBUG MODE *" << date << "| " << value << std::endl;    // DEBUG!!!
+    }
+        // 6. Comparamos los valores de ambos contenedores.
+    for (container::iterator it = tmp_map.begin(); it != tmp_map.end(); it++) {
+                
+    }
+    return ;
+}
+
+void BitcoinExchange::parseDate(std::string date) {
+    // Como funciona la funcion 'sscanf':
+    // leemos el string 'date.c_str()' y almacenamos los valores en 'tm->tm_year', 'tm->tm_mon' y 'tm->tm_mday'.
+    if (sscanf(date.c_str(), "%d-%d-%d", &tm->tm_year, &tm->tm_mon, &tm->tm_mday) != 3) {
+        throw BadDateException();
+    }
+}

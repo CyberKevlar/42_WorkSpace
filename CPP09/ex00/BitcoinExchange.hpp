@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:12 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/23 13:20:54 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/03 19:08:31 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 #include <iostream> 
 #include <string>
-#include <map>          // "std::map" lo usaremos para los contenedores.
-#include <fstream>      // "std::ifstream" lo usaremos para leer archivos completos.
-#include <sstream>      // "std::istringstream" lo usaremos para leer lineas de archivos abiertos.
+#include <map>          // 'std::map' lo usaremos para los contenedores.
+#include <fstream>      // 'std::ifstream' lo usaremos para leer archivos completos.
+#include <sstream>      // 'std::istringstream' lo usaremos para leer lineas de archivos abiertos.
+#include <ctime>        // lo usaremos para almacenar la fecha de los valores leidos.
+#include <iomanip>      // ????? c++11 ????? std::get_time
+#include <cstring>      // 'memset'.
 
 class BitcoinExchange
 {
@@ -24,7 +27,7 @@ class BitcoinExchange
     typedef std::map<std::string, double> container;
     /* Atributos privados. */
     private:
-        std::map<std::string, double> _storage;
+        container _storage;
     /* Atributos publicos. */
     public:
         BitcoinExchange();
@@ -34,8 +37,9 @@ class BitcoinExchange
 
         container getter();
         void setter(std::string &date, double &value);
-        void reading(std::string file);
-        void processing(std::string file);
+        void reading(void);
+        void processing(std::string input);
+        int parseDate(const std::string &date, int &year, int &month, int &day);
         
         class NegativeNumberException : public std::exception {
             public:

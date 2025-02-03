@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:10:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/01/23 13:44:28 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:49:39 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ int main(int ac , char **av)
 		std::cout << "Error: there's no file to open." << std::endl;
 		return 0;
 	}
-	char *csv = "data.csv";
 	BitcoinExchange container;
-	container.reading(av[1]);
-	container.processing(csv);
+	container.reading();
+	container.processing(av[1]);
 	return 0;    
 }
