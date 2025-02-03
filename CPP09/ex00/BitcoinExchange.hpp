@@ -18,7 +18,6 @@
 #include <fstream>      // 'std::ifstream' lo usaremos para leer archivos completos.
 #include <sstream>      // 'std::istringstream' lo usaremos para leer lineas de archivos abiertos.
 #include <ctime>        // lo usaremos para almacenar la fecha de los valores leidos.
-#include <iomanip>      // ????? c++11 ????? std::get_time
 #include <cstring>      // 'memset'.
 
 class BitcoinExchange

@@ -87,7 +87,7 @@ void BitcoinExchange::reading(void)
             new_line >> value;                      // ... entonces leemos el valor de 'new_line' y lo almacenamos en 'value'.
             setter(date, value);
         }
-        //std::cout << "DEBUG MODE * " << date << " | " << value << std::endl;    // DEBUG!!!
+        std::cout << "DEBUG MODE * " << date << " | " << value << std::endl;    // DEBUG!!!
     }
 }
 
@@ -106,18 +106,6 @@ void BitcoinExchange::processing(std::string input) {
         double value;
         if (std::getline(new_line, date, ',')) {
             new_line >> value;
-            if (new_line.fail() || value < 0) {
-                std::cout << "Error: invalid value in line." << std::endl;
-                continue ;
-            }
-            int year, month, day;
-            try {
-                parseDate(line, year, month, day);
-                std::cout << year << " | " << month << " | " << day << std::endl;    // DEBUG!!!
-            }
-            catch (const BadDateException &e) {
-                std::cout << e.what() << std::endl;
-            }
         }
     }
 }
