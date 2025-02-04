@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:12 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/04 15:43:38 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:32:47 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class BitcoinExchange
         BitcoinExchange &operator=(const BitcoinExchange &src);
 
         void setter(std::string &date, double &value);
-        void reading(void);
-        void processing(std::string input);
-        int checkYear(int year, int month, int day);
+        void saveCSV(void);
+        void checkInput(std::string input);
+        double compare(std::string date, double value);        
 };

@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:10:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/04 14:17:36 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:26:09 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ int main(int ac , char **av)
 		return 0;
 	}
 	BitcoinExchange container;
-	container.processing(av[1]);
+	container.checkInput(av[1]);
 	return 0;    
 }
