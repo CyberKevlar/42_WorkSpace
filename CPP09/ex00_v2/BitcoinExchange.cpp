@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/04 15:48:26 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:09:46 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,12 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &src)
     return (*this);
 }
 
-/* Setter. */
 void BitcoinExchange::setter(std::string &date, double &value)
 {
     _storage[date] = value;
 }
 
-/* Funcion para leer el archivo '.csv' y almacenar sus valores en el contenedor tipo 'map' de la clase. */
-void BitcoinExchange::reading(void)
+void BitcoinExchange::saveCSV(void)
 {
     std::ifstream csv;
     csv.open("data.csv");
@@ -70,10 +68,8 @@ void BitcoinExchange::reading(void)
     }
 }
 
-/* Funcion para comparar los valores de '_storage' (usando la funcion 'reading') y de 'input'. */
-void BitcoinExchange::processing(std::string input)
+void BitcoinExchange::checkInput(std::string input)
 {
-    reading();
     std::ifstream file;
     file.open(input.c_str());
     if (!file) {
@@ -86,81 +82,9 @@ void BitcoinExchange::processing(std::string input)
     while(std::getline(file, line))
     {
         std::istringstream new_line(line);
-        if (std::getline(new_line, date, ','))
+        if (std::getline(new_line, date, '|'))
         {
-            new_line >> value;
-            if (_storage.find(date) != _storage.end())
-            {
-                if (_storage[date] == value)
-                    std::cout << date << " | " << value << " | " << "OK" << std::endl;
-                else
-                    std::cout << date << " | " << value << " | " << "KO" << std::endl;
-            }
-            else
-                std::cout << date << " | " << value << " | " << "KO" << std::endl;
+            
         }
     }
-}
-
-/* Funcion para comprobar los dias de los meses segun el año. */
-int BitcoinExchange::checkDate(int year, int month, int day)
-{
-    switch (month)
-	{
-		case 1:     // Meses que deben tener 30 dias.
-		case 3:
-		case 5:
-		case 7:
-		case 8:
-		case 10:
-		case 12:
-		{
-			if (day > 31 || day <= 0)
-				return (1);
-			break ;
-		}
-		case 4:    // Meses que deben tener 29 dias.
-		case 6:
-		case 9:
-		case 11:
-		{
-			if (day > 30 || day <= 0)
-				return (1);
-			break ;
-		}
-		case 2:   // Mes que puede tener 28 o 29 dias segun si el año es bisiesto.
-		{
-			if (year % 400 == 0 || (year % 4 == 0 && (year % 100 != 0)))
-			{
-				if (day > 29 || day <= 0)
-					return (1);
-			}
-			else
-			{
-				if (day > 28 || day <= 0)
-					return (1);
-			}
-			break ;
-		}
-		default:
-			return (1);
-	}
-	return (0);
-}
-
-int BitcoinExchange::parseDate(std::string date)
-{
-    int year;
-    int month;
-    int day;
-    std::string year_str;
-    std::string month_str;
-    std::string day_str;
-    year_str = atoi(date.substr(0, 4));
-    month_str = atoi(date.substr(5, 2));
-    day_str = atoi(date.substr(8, 2));
-    if (checkDate(year, month, day) == 1)
-        return (0);
-    
-    return (1);
 }
