@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/05 18:06:45 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/05 18:57:30 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,25 @@ RPN &RPN::operator=(const RPN &src)
 void RPN::parseInput(std::string input)
 {
     int digits = 0;
-    /*
+    int size = input.size();
+    int a;
+    int b;
+    for (int i = 0; i < size; i++) {
+        if (!isdigit(input[i]) && input[i] != '+' && input[i] != '-' && input[i] != '*' && input[i] != '/') {
+            std::cout << "ERROR: bad character." << std::endl;
+            return ;
+        }
+    }
     for (size_t i = 0; i < input.size(); ++i)
     {
         if (isdigit(input[i]))
             digits++;
     }
-    */
-    int size = input.size();
-    int a;
-    int b;
+    if (digits >= 10) {
+        std::cout << "ERROR: too many numbers." << std::endl;
+        return ;
+    }
+    digits = 0;
     for (int i = 0; i < size; i++)
     {
         if (input[i] == ' ')
@@ -94,7 +103,7 @@ void RPN::parseInput(std::string input)
         }
     }
     if (digits != 1) {
-        std::cout << "ERROR" << std::endl;
+        std::cout << "ERROR: result have too many numbers." << std::endl;
         return ;
     }
     std::cout << _calculator.top() << std::endl;
