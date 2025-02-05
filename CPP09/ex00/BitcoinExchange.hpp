@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:12 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/05 13:07:52 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:20:34 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <ctime>        // lo usaremos para almacenar la fecha de los valores leidos.
 #include <algorithm>    // 'std::remove_if'
 #include <climits>      // 'INT_MAX'
+#include <iomanip>      // 'std::fixed' y 'std::setprecision'
 
 class BitcoinExchange
 {
