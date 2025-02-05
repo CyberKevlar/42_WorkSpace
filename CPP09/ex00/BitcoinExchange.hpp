@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:12 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/04 16:32:47 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:07:52 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include <fstream>      // 'std::ifstream' lo usaremos para leer archivos completos.
 #include <sstream>      // 'std::istringstream' lo usaremos para procesar lineas de archivos abiertos.
 #include <ctime>        // lo usaremos para almacenar la fecha de los valores leidos.
-#include <climits>      // INT_MAX
-#include <iomanip>      // 'std::fixed' y 'std::setprecision'
+#include <algorithm>    // 'std::remove_if'
+#include <climits>      // 'INT_MAX'
 
 class BitcoinExchange
 {
@@ -36,7 +36,10 @@ class BitcoinExchange
         BitcoinExchange &operator=(const BitcoinExchange &src);
 
         void setter(std::string &date, double &value);
-        void saveCSV(void);
-        void checkInput(std::string input);
-        double compare(std::string date, double value);        
+        void readDataBase(void);
+        double compare(std::string date, double value);
+        int chech1stLine(std::string date);
+        int parseDate(std::string &date);
+        int parseValue(double &date);
+        void checkInput(std::string input);        
 };

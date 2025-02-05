@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/04 16:50:15 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:07:47 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void BitcoinExchange::setter(std::string &date, double &value)
     _storage[date] = value;
 }
 
-void BitcoinExchange::saveCSV(void)
+void BitcoinExchange::readDataBase(void)
 {
     std::ifstream csv;
     csv.open("data.csv");
@@ -87,9 +87,101 @@ double BitcoinExchange::compare(std::string date, double value)
     return (-1);
 }
 
+int BitcoinExchange::chech1stLine(std::string date)
+{
+    if (date == "date ")
+        return 1;
+    return 0;
+}
+
+int isLeapYear(int year, int month, int day)
+{
+	switch (month)
+	{
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+		{
+			if (day > 31 || day <= 0)
+				return 1;
+			break ;
+		}
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+		{
+			if (day > 30 || day <= 0)
+				return 1;
+			break ;
+		}
+		case 2:
+		{
+			if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))
+			{
+				if (day > 29 || day <= 0)
+					return 1;
+			}
+			else
+			{
+				if (day > 28 || day <= 0)
+					return 1;
+			}
+			break ;
+		}
+		default:
+			return 1;
+	}
+	return 0;
+}
+
+int BitcoinExchange::parseDate(std::string &date)
+{
+    date.erase(std::remove_if(date.begin(), date.end(), ::isspace), date.end());
+    int i = date.find("-", 0);
+    int j = date.find("-", i + 1);
+    int year = atoi(date.substr(0, i).c_str());
+    int month = atoi(date.substr(i + 1, j).c_str());
+    int day = atoi(date.substr(j + 1, date.size()).c_str());
+    // Fecha mas grande: 2022-03-29
+    // Error: bad input => 2001-42-42
+	if (year < 2009 || year > 2023 || (year == 2022 && month == 03 && day > 29)) {
+        std::cout << "Error: bad input" << " => " << date << std::endl;
+        return 1;
+    }
+	if (month < 1 || month > 12) {
+        std::cout << "Error: bad input" << " => " << date << std::endl;
+        return 1;
+    }
+	if (isLeapYear(year, month, day)){
+        std::cout << "Error: bad input" << " => " << date << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
+int BitcoinExchange::parseValue(double &value)
+{
+    if (value <= 0)
+    {
+        std::cout << "Error: not a positive number." << std::endl;
+        return 1;
+    }
+    if (value > INT_MAX)
+    {
+        std::cout << "Error: too large a number." << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
 void BitcoinExchange::checkInput(std::string input)
 {
-    saveCSV();
+    readDataBase();
     std::ifstream file;
     file.open(input.c_str());
     if (!file) {
@@ -105,10 +197,18 @@ void BitcoinExchange::checkInput(std::string input)
         if (std::getline(new_line, date, '|'))
         {
             new_line >> value;
-            
-            double result = compare(date, value);
-            
-            std::cout << date << " | " << result << std::endl;
+            if (chech1stLine(date))
+                continue ;
+            else
+            {
+                if (parseDate(date))
+                    continue ;
+                double result = compare(date, value);
+                if (parseValue(value))
+                    continue ;
+                // ej.: 2011-01-03 => 3 = 0.9
+                std::cout << date << " => " << value << " = " << result << std::endl;
+            }
         }
     }
 }
