@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 16:01:55 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/07 16:18:20 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:26:03 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ class PmergeMe
         PmergeMe &operator=(const PmergeMe &src);
         int errorControl(int ac, char **av);
         void fillPairs(std::vector<std::pair<int, int> > &v, std::deque<std::pair<int, int> > &d, int last);
-        void mercheDeque(std::deque<int, int> &d);
-        void fillNumbers(int ac, char **av);
+        void mercheDeque(std::deque<std::pair<int, int> > &d, int size);
+        void fillContainers(int ac, char **av);
 };

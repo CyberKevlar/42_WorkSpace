@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 16:01:52 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/07 11:07:35 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:25:48 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ int main(int ac, char **av)
         std::cout << "ERROR" << std::endl;
         return 0;
     }
-    p.fillNumbers(ac, av);
+    p.fillContainers(ac, av);
     return (0);
 }
