@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/07 17:25:41 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/07 23:03:53 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,11 @@ int PmergeMe::errorControl(int ac, char **av)
     return 0;
 }
 
-void PmergeMe::fillPairs(std::vector<std::pair<int, int> > &v, std::deque<std::pair<int, int> > &d, int last)
+void PmergeMe::fillPairs(std::vector<std::pair<int, int> > &v, std::deque<std::pair<int, int> > &d)
 {
-    std::cout << "- Vector: ";
-    for (size_t i = 0; i < v.size(); i++) {
-        std::cout << "(" << v[i].first << " - " << v[i].second << ") ";
-    }
     std::cout << std::endl;
     for (size_t i = 0; i < v.size(); i++) {
-        if (v[i].first < v[i].second) {
+        if (v[i].first > v[i].second) {
             std::pair<int, int> tmp(v[i].second, v[i].first);
             d.push_back(tmp);
         }
@@ -73,35 +69,13 @@ void PmergeMe::fillPairs(std::vector<std::pair<int, int> > &v, std::deque<std::p
             d.push_back(v[i]);
         }
     }
-    std::cout << "- Deque: ";
-    for (size_t i = 0; i < d.size(); i++) {
-        std::cout << "(" << d[i].first << " - " << d[i].second << ") ";
-    }
-    std::cout << last << std::endl;
-}
-
-void PmergeMe::mercheDeque(std::deque<std::pair<int, int> > &d, int size)
-{
-    if (size <= 1) {
-        return ;
-    }
-    mercheDeque(d, size - 1);
-    for (size_t i = 0; i < d.size(); i++) {
-        if (d[i].first > d[i + 1].first) {
-            std::pair<int, int> tmp(d[i].second, d[i].first);
-            d.push_back(tmp);
-        }
-        else {
-            d.push_back(d[i]);
-        }
-    }        
 }
 
 void PmergeMe::fillContainers(int ac, char **av)
 {
     for (int i = 1; i < ac; i++) {
         _v.push_back(std::atoi(av[i]));
-        //_d.push_back(std::atoi(av[i]));
+        _d.push_back(std::atoi(av[i]));
     }    
     std::vector<std::pair<int, int> > v;
     std::deque<std::pair<int, int> > d;
@@ -113,7 +87,11 @@ void PmergeMe::fillContainers(int ac, char **av)
         }
         v.push_back(std::make_pair(_v[i - 1], _v[i]));
     }
-    fillPairs(v, d, last);
+    for (size_t i = 0; i < v.size(); i++) {
+        std::cout << "(" << v[i].first << " - " << v[i].second << ")";
+    }
+    std::cout << std::endl;
+    fillPairs(v, d);
     for (int i = 1; i < ac; i++) {
         _v.pop_back();
         _d.pop_back();
@@ -121,9 +99,11 @@ void PmergeMe::fillContainers(int ac, char **av)
     for (size_t i = 0; i < d.size(); i++) {
         _v.push_back(d[i].first);
         _d.push_back(d[i].second);
-        std::cout << _v[i] << " - " << _d[i] << std::endl;
+        std::cout << "(" << _v[i] << "-" << _d[i] << ")";
     }
-    //int size = d.size();
-    // ...
-    //mercheDeque(_d, size);
+    std::cout << std::endl;
+    std::cout << "Last: " << last << std::endl;
+    int size = _d.size();
+    std::cout << "Size: " << size << std::endl;
+    
 }
