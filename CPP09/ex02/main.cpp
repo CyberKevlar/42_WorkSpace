@@ -36,15 +36,17 @@ int main(int ac, char **av)
     double timeV;
     double timeD;
     
+    p._v.clear();
     gettimeofday(&startV, NULL);
     p.fillContainers(ac, av);
     gettimeofday(&endV, NULL);
-    timeV = endV.tv_usec - startV.tv_usec;
+    timeV = ((endV.tv_sec - startV.tv_sec) * 1000000.0) + (endV.tv_usec - startV.tv_usec);
     
+    p._d.clear();
     gettimeofday(&startD, NULL);
     p.fillContainers(ac, av);
     gettimeofday(&endD, NULL);
-    timeD = endD.tv_usec - startD.tv_usec;
+    timeD = ((endD.tv_sec - startD.tv_sec) * 1000000.0) + (endD.tv_usec - startD.tv_usec);
     
     std::cout << "After: ";
     for (size_t i = 0; i < p._v.size(); i++) {
@@ -53,8 +55,8 @@ int main(int ac, char **av)
     std::cout << std::endl;
 
     std::cout << std::fixed << std::setprecision(5);
-    std::cout << "Time to process a range of " << ac - 1 << " elements with std::vector: " << timeV / 100000 << " us" << std::endl;
-    std::cout << "Time to process a range of " << ac - 1 << " elements with std::deque: " << timeD / 100000 << " us" << std::endl;
+    std::cout << "Time to process a range of " << ac - 1 << " elements with std::vector: " << timeV << " us" << std::endl;
+    std::cout << "Time to process a range of " << ac - 1 << " elements with std::deque: " << timeD << " us" << std::endl;
 
     return 0;
 }
