@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/10 19:36:40 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:48:53 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,6 @@ void PmergeMe::makePairs(std::vector<std::pair<int, int> > &v, std::deque<std::p
 
 void PmergeMe::separateVector(std::vector<std::pair<int, int> > &v)
 {
-    std::cout << "Before: ";
-    for (size_t i = 0; i < _v.size(); i++) {
-        std::cout << _v[i] << " ";
-    }
-    std::cout << std::endl;
     _v.clear(); // LIMPIAMOS EL VECTOR PRIVADO (OJO, ES DIFERENTE A LA DEL DEQUE).
     for (size_t i = 0; i < v.size(); i++) {
         if (v[i].first < v[i].second) {
@@ -98,11 +93,6 @@ void PmergeMe::separateVector(std::vector<std::pair<int, int> > &v)
 
 void PmergeMe::separateDeque(std::deque<std::pair<int, int> > &d)
 {
-    std::cout << "Before: ";
-    for (size_t i = 0; i < _d.size(); i++) {
-        std::cout << _d[i] << " ";
-    }
-    std::cout << std::endl;
     std::deque<int>().swap(_d);     // LIMPIAMOS EL DEQUE PRIVADO (OJO, ES DIFERENTE A LA DEL VECTOR).
     for (size_t i = 0; i < d.size() / 2; i++) {
         if (d[i].first < d[i].second) {
@@ -121,11 +111,6 @@ void PmergeMe::orderVector(containerV &_v, int last)
         _v.push_back(last);
     }
     std::sort(_v.begin(), _v.end());
-    std::cout << "After: ";
-    for (size_t i = 0; i < _v.size(); i++) {
-        std::cout << _v[i] << " ";
-    }
-    std::cout << std::endl;
 }
 
 void PmergeMe::orderDeque(containerD &_d, int last)
@@ -134,11 +119,6 @@ void PmergeMe::orderDeque(containerD &_d, int last)
         _d.push_back(last);
     }
     std::sort(_d.begin(), _d.end());
-    std::cout << "After: ";
-    for (size_t i = 0; i < _d.size(); i++) {
-        std::cout << _d[i] << " ";
-    }
-    std::cout << std::endl;
 }
 
 void PmergeMe::fillContainers(int ac, char **av)

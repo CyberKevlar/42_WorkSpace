@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 16:01:55 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/10 19:24:02 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/10 20:06:34 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <sstream>      // std::stringstream
 #include <climits>      // INT_MIN
 #include <sys/time.h>   // gettimeofday
+#include <iomanip> // Necesario para std::fixed y std::setprecision
 
 class PmergeMe
 {
@@ -27,10 +28,12 @@ class PmergeMe
     typedef std::deque<int> containerD;
     /* Atributos privados. */
     private:
-        containerV _v;
-        containerD _d;
     /* Atributos publicos. */
     public:
+        /* Variables publicas. */
+        containerV _v;
+        containerD _d;
+        /* Funciones publicas. */
         PmergeMe();
         ~PmergeMe();
         PmergeMe(const PmergeMe &copy);
