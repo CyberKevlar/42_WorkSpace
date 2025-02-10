@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/10 15:27:09 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:36:40 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,78 +65,80 @@ int PmergeMe::errorControl(int ac, char **av)
 
 void PmergeMe::makePairs(std::vector<std::pair<int, int> > &v, std::deque<std::pair<int, int> > &d)
 {
-    std::cout << std::endl;
     for (size_t i = 0; i < v.size(); i++) {
+        std::pair<int, int> tmp;
         if (v[i].first > v[i].second) {
-            std::pair<int, int> tmp(v[i].second, v[i].first);
-            d.push_back(tmp);
+            tmp = std::make_pair(v[i].second, v[i].first);
+        } else {
+            tmp = v[i];
         }
-        else {
-            d.push_back(v[i]);
+        v[i] = tmp;         // RELLENAMOS UN VECTOR.
+        d.push_back(tmp);   // RELLENAMOS UN DEQUE.
+    }
+}
+
+void PmergeMe::separateVector(std::vector<std::pair<int, int> > &v)
+{
+    std::cout << "Before: ";
+    for (size_t i = 0; i < _v.size(); i++) {
+        std::cout << _v[i] << " ";
+    }
+    std::cout << std::endl;
+    _v.clear(); // LIMPIAMOS EL VECTOR PRIVADO (OJO, ES DIFERENTE A LA DEL DEQUE).
+    for (size_t i = 0; i < v.size(); i++) {
+        if (v[i].first < v[i].second) {
+            _v.push_back(v[i].first);
+            _v.push_back(v[i].second);
+        } else {
+            _v.push_back(v[i].second);
+            _v.push_back(v[i].first);
         }
     }
 }
 
-void PmergeMe::separate(std::deque<std::pair<int, int> > &d)
+void PmergeMe::separateDeque(std::deque<std::pair<int, int> > &d)
 {
-    for (size_t i = 0; i < d.size(); i++) {
+    std::cout << "Before: ";
+    for (size_t i = 0; i < _d.size(); i++) {
+        std::cout << _d[i] << " ";
+    }
+    std::cout << std::endl;
+    std::deque<int>().swap(_d);     // LIMPIAMOS EL DEQUE PRIVADO (OJO, ES DIFERENTE A LA DEL VECTOR).
+    for (size_t i = 0; i < d.size() / 2; i++) {
         if (d[i].first < d[i].second) {
-            _v.push_back(d[i].first);
+            _d.push_back(d[i].first);
             _d.push_back(d[i].second);
         } else {
-            _v.push_back(d[i].second);
+            _d.push_back(d[i].second);
             _d.push_back(d[i].first);
         }
     }
 }
 
-void PmergeMe::orderVector(containerV &_v)
+void PmergeMe::orderVector(containerV &_v, int last)
 {
-    for (size_t i = 0; i < _v.size(); i++)
-    {
-        for (size_t j = i + 1; j < _v.size(); j++)
-        {
-            if (_v[i] > _v[j]) {
-                // Intercambiar los elementos
-                int temp = _v[i];
-                _v[i] = _v[j];
-                _v[j] = temp;
-            }
-        }
+    if (last != INT_MIN) {
+        _v.push_back(last);
     }
+    std::sort(_v.begin(), _v.end());
+    std::cout << "After: ";
     for (size_t i = 0; i < _v.size(); i++) {
-        std::cout << "-" << _v[i];
+        std::cout << _v[i] << " ";
     }
+    std::cout << std::endl;
 }
 
-void PmergeMe::orderDeque(containerD &_d)
+void PmergeMe::orderDeque(containerD &_d, int last)
 {
-    for (size_t i = 0; i < _d.size(); i++)
-    {
-        for (size_t j = i + 1; j < _d.size(); j++)
-        {
-            if (_d[i] > _d[j]) {
-                // Intercambiar los elementos
-                int temp = _d[i];
-                _d[i] = _d[j];
-                _d[j] = temp;
-            }
-        }
+    if (last != INT_MIN) {
+        _d.push_back(last);
     }
+    std::sort(_d.begin(), _d.end());
+    std::cout << "After: ";
     for (size_t i = 0; i < _d.size(); i++) {
-        std::cout << "+" << _d[i];
+        std::cout << _d[i] << " ";
     }
-}
-
-void PmergeMe::printOrder(std::string last) {
-    std::vector<int> combined(_v.begin(), _v.end());
-    combined.insert(combined.end(), _d.begin(), _d.end());
-    std::sort(combined.begin(), combined.end());
-    for (size_t i = 0; i < combined.size(); i++) {
-        std::cout << " " << combined[i];
-    }
-    if (last != "")
-        std::cout << " " << last;
+    std::cout << std::endl;
 }
 
 void PmergeMe::fillContainers(int ac, char **av)
@@ -147,48 +149,51 @@ void PmergeMe::fillContainers(int ac, char **av)
     }    
     std::vector<std::pair<int, int> > v;    // AQUI GUARDAREMOS LA LISTA DE PARES DESORDENADA.
     std::deque<std::pair<int, int> > d;     // AQUI GUARDAREMOS LA LISTA DE PARES ORDENADA.
-    std::string last = "";                  // AQUI GUARDAREMOS EL ULTIMO ELEMENTO SI EXISTE.
+    int last = INT_MIN;                     // AQUI GUARDAREMOS EL ULTIMO ELEMENTO SI EXISTE.
     for (int i = 1; i < ac; i += 2) {
         if (i + 1 < ac) {
             v.push_back(std::make_pair(_v[i - 1], _v[i]));
+            d.push_back(std::make_pair(_d[i - 1], _d[i]));
         } else {
-            last = itoa(_v[i - 1]);
-            break;
+            last = _v[i - 1];
+            break ;
         }
     }
-    // COMPROBACION QUE SE HAN RELLENADO BIEN EL CONTENEDOR 'V' DE PARES, EL DESORDENADO.
-    for (size_t i = 0; i < v.size(); i++) {
-        std::cout << "(" << v[i].first << " - " << v[i].second << ")";
-    }
+    // COMPROBACION QUE SE HAN RELLENADO BIEN 'V' y 'D'.
+    //for (size_t i = 0; i < v.size(); i++) {
+    //    std::cout << "v1 (" << v[i].first << " - " << v[i].second << ") ";
+    //}
+    //std::cout << std::endl;
+    //for (size_t i = 0; i < d.size(); i++) {
+    //    std::cout << "d1 (" << d[i].first << " - " << d[i].second << ") ";
+    //}
+    //std::cout << std::endl;
     // ORDENADOMOS EL CONTENEDOR 'V' E INSERTAMOS LOS CAMBIO EN EL 'D'.
     makePairs(v, d);
-    // COMPROBACION QUE SE HAN RELLENADO BIEN EL CONTENEDOR 'D' DE PARES, ORDENADO DE '-' A '+'.
-    for (size_t i = 0; i < d.size(); i++) {
-        std::cout << "(" << d[i].first << " - " << d[i].second << ")";
-    }
-    std::cout << std::endl;
-    // BORRAMOS LA TOTALIDAD DE LOS ELEMENTOS DE LOS CONTENEDORES DE LAS CLASES PRIVADAS.
-    for (int i = 1; i < ac; i++) {
-        _v.pop_back();
-        _d.pop_back();
-    }
-    // SEPARAMOS LOS ELEMENTOS GRANDES DE LOS PEQUEÑOS PARA METERLOS EN LA CLASE PRIVADA
-    separate(d);
+    // COMPROBACION QUE SE HAN ORDENADO BIEN 'V' Y 'D', DE - A +.
+    //std::cout << "v.size() --> " << v.size() << std::endl;
+    //for (size_t i = 0; i < v.size(); i++) {
+    //    std::cout << "v2 (" << v[i].first << " - " << v[i].second << ") ";
+    //}
+    //std::cout << std::endl;
+    //std::cout << "d.size() --> " << v.size() << std::endl;
+    //for (size_t i = 0; i < d.size(); i++) {
+    //    std::cout << "d2 (" << d[i].first << " - " << d[i].second << ") ";
+    //}
+    //std::cout << std::endl;
+    // SEPARAMOS LOS ELEMENTOS GRANDES DE LOS PEQUEÑOS PARA METERLOS EN LA CLASE PRIVADA.
+    separateVector(v);
+    separateDeque(d);
     // COMPROBACION QUE SE HAN RELLENADO BIEN EL CONTENEDOR PRIVADO '_V' CON LOS MENORES.
-    for (size_t i = 0; i < _v.size(); i++) {
-        std::cout << "-(" << _v[i] << ")";
-    }
-    std::cout << std::endl;
+    //for (size_t i = 0; i < _v.size(); i++) {
+    //    std::cout << "v3 (" << _v[i] << ") ";
+    //}
+    //std::cout << std::endl;
     // COMPROBACION QUE SE HAN RELLENADO BIEN EL CONTENEDOR PRIVADO '_D' CON LOS MAYORES.
-    for (size_t i = 0; i < _d.size(); i++) {
-        std::cout << "+(" << _d[i] << ")";
-    }
-    std::cout << std::endl;
+    //for (size_t i = 0; i < _d.size(); i++) {
+    //    std::cout << "d3 (" << _d[i] << ") ";
+    //}
     // ORDENAMOS LOS CONTENEDORES PRIVADOS '_V' Y '_D' Y LOS MOSTRAMOS, AL IGUAL QUE LAST (SI EXISTE).
-    orderVector(_v);
-    std::cout << std::endl;
-    orderDeque(_d);
-    std::cout << std::endl;
-    printOrder(last);
-    std::cout << std::endl;
+    orderVector(_v, last);
+    orderDeque(_d, last);
 }
