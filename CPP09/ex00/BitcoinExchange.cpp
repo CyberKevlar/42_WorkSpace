@@ -205,6 +205,8 @@ void BitcoinExchange::checkInput(std::string input)
             size_t i;
             std::string tmp;
             new_line >> tmp;
+            if (chech1stLine(date))
+                continue ;
             if (!new_line.eof())
             {
                 std::cout << "Error: invalid value." << std::endl;
@@ -225,18 +227,13 @@ void BitcoinExchange::checkInput(std::string input)
                 continue ;
             std::istringstream tmp_c(tmp);
             tmp_c >> value;
-            if (chech1stLine(date))
+            if (parseDate(date))
                 continue ;
-            else
-            {
-                if (parseDate(date))
-                    continue ;
-                if (parseValue(value))
-                    continue ;
-                double result = compare(date, value);
-                // ej.: 2011-01-03 => 3 = 0.9
-                std::cout << date << " => " << value << " = " << result << std::endl;
-            }
+            if (parseValue(value))
+                continue ;
+            double result = compare(date, value);
+            // ej.: 2011-01-03 => 3 = 0.9
+            std::cout << date << " => " << value << " = " << result << std::endl;
         }
     }
 }
