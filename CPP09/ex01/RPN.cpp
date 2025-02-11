@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/11 16:35:25 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:43:54 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void RPN::parseInput(std::string input)
         }
     }
     if (digits != 1) {
-        std::cout << "ERROR: numbers error." << std::endl;
+        std::cout << "ERROR: missing operands." << std::endl;
         return ;
     }
     std::cout << _calculator.top() << std::endl;

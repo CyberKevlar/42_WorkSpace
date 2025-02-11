@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/11 15:17:29 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:33:17 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,10 +198,33 @@ void BitcoinExchange::checkInput(std::string input)
     double value;
     while(std::getline(file, line))
     {
+        int invalid = 0;
         std::istringstream new_line(line);
         if (std::getline(new_line, date, '|'))
         {
-            new_line >> value;
+            size_t i;
+            std::string tmp;
+            new_line >> tmp;
+            if (!new_line.eof())
+            {
+                std::cout << "Error: invalid value." << std::endl;
+                continue ;
+            }
+            for (i = 0; i < tmp.size(); i++) {
+                if (!isspace(tmp[i])) break;
+            }
+            if (tmp[i] == '+' || tmp[i] == '-') i++;
+            for (; i < tmp.size(); i++) {
+                if (!isdigit(tmp[i]) && tmp[i] != '.') {
+                    std::cout << "Error: invalid value." << std::endl;
+                    invalid = 1;
+                    break ;
+                }
+            }
+            if (invalid == 1)
+                continue ;
+            std::istringstream tmp_c(tmp);
+            tmp_c >> value;
             if (chech1stLine(date))
                 continue ;
             else
