@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/05 18:57:30 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:35:25 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,11 @@ void RPN::parseInput(std::string input)
     int a;
     int b;
     for (int i = 0; i < size; i++) {
-        if (!isdigit(input[i]) && input[i] != '+' && input[i] != '-' && input[i] != '*' && input[i] != '/') {
+        if (!isdigit(input[i]) && input[i] != '+' && input[i] != '-' && input[i] != '*' && input[i] != '/' && input[i] != ' ') {
             std::cout << "ERROR: bad character." << std::endl;
             return ;
         }
     }
-    for (size_t i = 0; i < input.size(); ++i)
-    {
-        if (isdigit(input[i]))
-            digits++;
-    }
-    if (digits >= 10) {
-        std::cout << "ERROR: too many numbers." << std::endl;
-        return ;
-    }
-    digits = 0;
     for (int i = 0; i < size; i++)
     {
         if (input[i] == ' ')
@@ -68,8 +58,16 @@ void RPN::parseInput(std::string input)
         if (isdigit(input[i])) {
             _calculator.push(input[i] - '0');
             digits++;
-        }
-        else if (input[i] == '+') {
+        } else if (_calculator.size() < 2) {
+            std::cout << "ERROR: not enough numbers." << std::endl;
+            return ;
+        } else if (i == 0 && (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/')) {
+            std::cout << "ERROR: bad syntax." << std::endl;
+            return ;
+        } else if (i > 0 && (input[i - 1] == '+' || input[i - 1] == '-' || input[i - 1] == '*' || input[i - 1] == '/')) {
+            std::cout << "ERROR: bad syntax." << std::endl;
+            return ;
+        } else if (input[i] == '+') {
             a = _calculator.top();
             _calculator.pop();
             b = _calculator.top();
@@ -98,12 +96,16 @@ void RPN::parseInput(std::string input)
             _calculator.pop();
             b = _calculator.top();
             _calculator.pop();
+            if (a == 0) {
+                std::cout << "ERROR: division fail." << std::endl;
+                return ;
+            }
             _calculator.push(b / a);
             digits--;
         }
     }
     if (digits != 1) {
-        std::cout << "ERROR: result have too many numbers." << std::endl;
+        std::cout << "ERROR: numbers error." << std::endl;
         return ;
     }
     std::cout << _calculator.top() << std::endl;

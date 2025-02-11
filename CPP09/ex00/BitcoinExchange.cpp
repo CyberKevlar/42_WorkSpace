@@ -6,7 +6,7 @@
 /*   By: jmartos- <jmartos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 11:12:17 by jmartos-          #+#    #+#             */
-/*   Updated: 2025/02/05 13:58:24 by jmartos-         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:17:29 by jmartos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int BitcoinExchange::parseDate(std::string &date)
     int year = atoi(date.substr(0, i).c_str());
     int month = atoi(date.substr(i + 1, j).c_str());
     int day = atoi(date.substr(j + 1, date.size()).c_str());
+    // Fecha mas pequeña: 2009-01-02
     // Fecha mas grande: 2022-03-29
     // Error: bad input => 2001-42-42
 	if (year < 2009) {
@@ -161,6 +162,10 @@ int BitcoinExchange::parseDate(std::string &date)
         std::cout << "Error: bad input" << " => " << date << std::endl;
         return 1;
     }
+    if (year == 2009 && month == 1 && day == 1) {
+        std::cout << "Error: bad input" << " => " << date << std::endl;
+        return 1;
+    }
     return 0;
 }
 
@@ -171,7 +176,7 @@ int BitcoinExchange::parseValue(double &value)
         std::cout << "Error: not a positive number." << std::endl;
         return 1;
     }
-    if (value > INT_MAX)
+    if (value >= 1000)
     {
         std::cout << "Error: too large a number." << std::endl;
         return 1;
