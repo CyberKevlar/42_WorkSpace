@@ -3,13 +3,15 @@
 #include <iostream>
 #include <vector>
 #include "ASpell.hpp"
-#include "Dummy.hpp"
+#include "SpellBook.hpp"
 
 class Warlock
 {
     private:
         std::string name;
         std::string title;
+
+        SpellBook spellbook;
     public:
         std::vector<ASpell *> attacks;
 
