@@ -3,7 +3,9 @@
 #include "ATarget.hpp"
 #include <iostream> 
 
-clase Dummy : public ATarget
+class Dummy : public ATarget
 {
-    
+    public:
+        Dummy();
+        virtual ~Dummy();
 }
