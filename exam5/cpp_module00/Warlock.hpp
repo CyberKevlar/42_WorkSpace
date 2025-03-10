@@ -7,11 +7,13 @@ class Warlock
     private:
         std::string name;
         std::string title;
+
+        Warlock() = delete;
+        Warlock(const Warlock &copy) = delete;
+        Warlock &operator=(const Warlock &src) = delete;
     public:
-        Warlock(const std::string &name, const std::string &title);
+        Warlock(std::string &name, std::string &title);
         ~Warlock();
-        Warlock(const Warlock &copy);
-        Warlock &operator=(const Warlock &src);
 
         const std::string &getName(void) const;
         const std::string &getTitle(void) const;
@@ -19,4 +21,4 @@ class Warlock
         void setTitle(const std::string &newTitle);
         
         void introduce(void) const;
-    };
+};

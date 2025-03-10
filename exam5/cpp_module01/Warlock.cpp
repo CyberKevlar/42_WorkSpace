@@ -1,6 +1,6 @@
 #include "Warlock.hpp"
 
-Warlock::Warlock(const std::string &name, const std::string &title)
+Warlock::Warlock(std::string &name, std::string &title)
 {
     this->name = name;
     this->title = title;
@@ -9,17 +9,6 @@ Warlock::Warlock(const std::string &name, const std::string &title)
 
 Warlock::~Warlock() {
     std::cout << this->name << ": My job here is done!" << std::endl;
-}
-
-Warlock::Warlock(const Warlock &copy) : name(copy.name), title(copy.title) {}
-
-Warlock &Warlock::operator=(const Warlock &src)
-{
-    if (this != &src) {
-        this->name = src.name;
-        this->title = src.title;
-    }
-    return *this;
 }
 
 const std::string &Warlock::getName(void) const
