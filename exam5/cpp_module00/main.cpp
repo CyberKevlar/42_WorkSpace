@@ -1,4 +1,4 @@
-/* Este main es solo para pruebas! (g++ -g -Wall -Werror -Wextra Warlock.cpp main.cpp -o Warlock)*/
+/* Este main es solo para pruebas! (g++ -g -Wall -Werror -Wextra main.cpp Warlock.cpp -o test)*/
 
 #include "Warlock.hpp"
 

@@ -3,14 +3,16 @@
 #include "ASpell.hpp"
 #include <iostream>
 
-class ATarget: public ASpell
+class ASpell;
+
+class ATarget
 {
     protected:
         std::string type;
         ATarget();
     public:
         ATarget(const std::string &type);
-        ~ATarget();
+        virtual ~ATarget();
         ATarget(const ATarget &copy);
         ATarget &operator=(const ATarget &src);
 
