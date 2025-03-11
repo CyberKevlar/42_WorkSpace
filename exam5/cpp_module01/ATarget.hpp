@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ASpell.hpp"
 #include <iostream>
+#include "ASpell.hpp"
 
 class ASpell;
 
@@ -9,11 +9,12 @@ class ATarget
 {
     protected:
         std::string type;
-        ATarget();
+
+        ATarget() = delete;
     public:
         ATarget(const std::string &type);
-        virtual ~ATarget();
         ATarget(const ATarget &copy);
+        virtual ~ATarget();
         ATarget &operator=(const ATarget &src);
 
         std::string const &getType(void) const;

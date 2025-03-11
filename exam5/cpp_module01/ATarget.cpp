@@ -5,9 +5,9 @@ ATarget::ATarget(const std::string &type)
     this->type = type;
 }
 
-ATarget::~ATarget() {}
-
 ATarget::ATarget(const ATarget &copy) : type(copy.type) {}
+
+ATarget::~ATarget() {}
 
 ATarget &ATarget::operator=(const ATarget &src)
 {
