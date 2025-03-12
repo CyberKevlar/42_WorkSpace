@@ -1,6 +1,6 @@
 #include "Warlock.hpp"
 
-Warlock::Warlock(const std::string &name, const std::string &title)
+Warlock::Warlock(std::string &name, std::string &title)
 {
     this->name = name;
     this->title = title;
@@ -9,17 +9,6 @@ Warlock::Warlock(const std::string &name, const std::string &title)
 
 Warlock::~Warlock() {
     std::cout << this->name << ": My job here is done!" << std::endl;
-}
-
-Warlock::Warlock(const Warlock &copy) : name(copy.name), title(copy.title) {}
-
-Warlock &Warlock::operator=(const Warlock &src)
-{
-    if (this != &src) {
-        this->name = src.name;
-        this->title = src.title;
-    }
-    return *this;
 }
 
 const std::string &Warlock::getName(void) const
@@ -35,29 +24,34 @@ const std::string &Warlock::getTitle(void) const
 void Warlock::setTitle(const std::string &newTitle)
 {
     this->title = newTitle;
+    return ;
 }
 
 void Warlock::introduce(void) const
 {
     std::cout << this->name << ": I am " << this->name << ", " << this->title << "!" << std::endl;
+    return ;
 }
 
-void Warlock::learnSpell(ASpell *newSpell)
+void Warlock::learnSpell(ASpell *spell)
 {
-    this->spellbook.learnSpell(newSpell);
+    this->spellbook.learnSpell(spell);
+    return ;
 }
 
 void Warlock::forgetSpell(std::string spell)
 {
     this->spellbook.forgetSpell(spell);
+    return ;
 }
 
 void Warlock::launchSpell(std::string spell, ATarget &target)
 {
-    ATarget const *test = 0;
-    if (test == &target)
+    ATarget const *tmp1 = 0;
+    if (tmp1 == &target)
         return ;
-    ASpell *tmp = spellbook.createSpell(spell);
-    if (tmp)
-        tmp->launch(target);
+    ASpell *tmp2 = spellbook.createSpell(spell);
+    if (tmp2)
+        tmp2->launch(target);
+    return ;
 }

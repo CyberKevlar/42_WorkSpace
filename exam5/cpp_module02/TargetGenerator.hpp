@@ -8,13 +8,15 @@ class TargetGenerator
 {
     private:
         std::vector<ATarget *> target;
-        TargetGenerator(TargetGenerator const &copy);
-		TargetGenerator &operator=(TargetGenerator const &src);
+
+        TargetGenerator(TargetGenerator const &copy) = delete;
+		TargetGenerator &operator=(TargetGenerator const &src) = delete;
+
     public:
         TargetGenerator();
-        ~TargetGenerator();
+        virtual ~TargetGenerator();
 
-        void learnTargetType(ATarget *newTarget);
+        void learnTargetType(ATarget *target);
         void forgetTargetType(std::string const &target);
         ATarget *createTarget(std::string const &target);
 };

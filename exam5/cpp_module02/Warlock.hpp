@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "ASpell.hpp"
+#include "ATarget.hpp"
 #include "SpellBook.hpp"
 
 class Warlock
@@ -10,15 +11,15 @@ class Warlock
     private:
         std::string name;
         std::string title;
-
         SpellBook spellbook;
-    public:
-        std::vector<ASpell *> attacks;
 
-        Warlock(const std::string &name, const std::string &title);
+        Warlock() = delete;
+        Warlock(const Warlock &copy) = delete;
+        Warlock &operator=(const Warlock &src) = delete;
+    
+    public:
+        Warlock(std::string &name, std::string &title);
         ~Warlock();
-        Warlock(const Warlock &copy);
-        Warlock &operator=(const Warlock &src);
 
         const std::string &getName(void) const;
         const std::string &getTitle(void) const;
@@ -27,7 +28,7 @@ class Warlock
         
         void introduce(void) const;
 
-        void learnSpell(ASpell *newSpell);
+        void learnSpell(ASpell *spell);
         void forgetSpell(std::string spell);
         void launchSpell(std::string spell, ATarget &target);
 };

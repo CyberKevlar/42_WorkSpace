@@ -8,8 +8,9 @@ class SpellBook
 {
     private:
         std::vector<ASpell *> book;
-        SpellBook(SpellBook const &copy);
-		SpellBook &operator=(SpellBook const &src);
+
+        SpellBook(SpellBook const &copy) = delete;
+		SpellBook &operator=(SpellBook const &src) = delete;
     public:
         SpellBook();
         virtual ~SpellBook();

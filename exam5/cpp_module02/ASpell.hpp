@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ATarget.hpp"
 #include <iostream>
+#include "ATarget.hpp"
 
 class ATarget;
 
@@ -10,12 +10,12 @@ class ASpell
     protected:
         std::string name;
         std::string effects;
-    public:
-        ASpell();
 
+        ASpell() = delete;
+    public:
         ASpell(const std::string &name, const std::string &effects);
-        virtual ~ASpell();
         ASpell(const ASpell &copy);
+        virtual ~ASpell();
         ASpell &operator=(const ASpell &src);
 
         std::string const &getName(void) const;
