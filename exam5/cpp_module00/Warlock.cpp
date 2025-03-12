@@ -22,9 +22,9 @@ const std::string &Warlock::getTitle(void) const
     return this->title;
 }
 
-void Warlock::setTitle(const std::string &newTitle)
+void Warlock::setTitle(const std::string &title)
 {
-    this->title = newTitle;
+    this->title = title;
 }
 
 void Warlock::introduce(void) const
