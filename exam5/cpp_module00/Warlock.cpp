@@ -1,6 +1,6 @@
 #include "Warlock.hpp"
 
-Warlock::Warlock(std::string &name, std::string &title)
+Warlock::Warlock(const std::string &name, const std::string &title)
 {
     this->name = name;
     this->title = title;

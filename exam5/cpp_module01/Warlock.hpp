@@ -17,7 +17,7 @@ class Warlock
         Warlock &operator=(const Warlock &src) = delete;
     
     public:
-        Warlock(std::string &name, std::string &title);
+        Warlock(const std::string &name, const std::string &title);
         ~Warlock();
 
         const std::string &getName(void) const;
