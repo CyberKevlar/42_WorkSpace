@@ -8,24 +8,23 @@
 class Warlock
 {
     private:
-        std::string name;
-        std::string title;
-        std::vector<ASpell *> spells;
+        std::string _name;
+        std::string _title;
+        std::vector<ASpell *> _spells;
 
-        Warlock() = delete;
-        Warlock(const Warlock &copy) = delete;
-        Warlock &operator=(const Warlock &src) = delete;
-    
+        Warlock();
+        Warlock(const Warlock &copy);
+        Warlock &operator=(const Warlock &src);
     public:
         Warlock(const std::string &name, const std::string &title);
         ~Warlock();
 
-        const std::string &getName(void) const;
-        const std::string &getTitle(void) const;
+        const std::string &getName() const;
+        const std::string &getTitle() const;
 
         void setTitle(const std::string &title);
         
-        void introduce(void) const;
+        void introduce() const;
 
         void learnSpell(ASpell *spell);
         void forgetSpell(std::string spell);

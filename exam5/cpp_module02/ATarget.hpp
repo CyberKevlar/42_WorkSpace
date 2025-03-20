@@ -8,18 +8,18 @@ class ASpell;
 class ATarget
 {
     protected:
-        std::string type;
+        std::string _type;
 
-        ATarget() = delete;
+        ATarget();
     public:
         ATarget(const std::string &type);
         ATarget(const ATarget &copy);
         virtual ~ATarget();
         ATarget &operator=(const ATarget &src);
 
-        std::string const &getType(void) const;
+        std::string const &getType() const;
+
+        virtual ATarget *clone() const = 0;
 
         void getHitBySpell(const ASpell &spell) const;
-
-        virtual ATarget *clone(void) const = 0;
 };

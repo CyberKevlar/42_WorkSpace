@@ -7,11 +7,10 @@
 class TargetGenerator
 {
     private:
-        std::vector<ATarget *> target;
+        std::vector<ATarget *> _target;
 
-        TargetGenerator(TargetGenerator const &copy) = delete;
-		TargetGenerator &operator=(TargetGenerator const &src) = delete;
-
+        TargetGenerator(TargetGenerator const &copy);
+		TargetGenerator &operator=(TargetGenerator const &src);
     public:
         TargetGenerator();
         virtual ~TargetGenerator();
