@@ -33,17 +33,17 @@ void Warlock::introduce(void) const
 
 void Warlock::learnSpell(ASpell *spell)
 {
-    this->_spellbook.learnSpell(spell);
+    this->_book.learnSpell(spell);
 }
 
 void Warlock::forgetSpell(std::string spell)
 {
-    this->_spellbook.forgetSpell(spell);
+    this->_book.forgetSpell(spell);
 }
 
 void Warlock::launchSpell(std::string spell, ATarget &target)
 {
-    ASpell *tmp = _spellbook.createSpell(spell);
+    ASpell *tmp = _book.createSpell(spell);
     if (tmp)
         tmp->launch(target);
 }

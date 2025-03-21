@@ -11,6 +11,7 @@ class TargetGenerator
 
         TargetGenerator(TargetGenerator const &copy);
 		TargetGenerator &operator=(TargetGenerator const &src);
+        
     public:
         TargetGenerator();
         virtual ~TargetGenerator();

@@ -23,12 +23,12 @@ ASpell &ASpell::operator=(const ASpell &src)
     return *this;
 }
 
-std::string const &ASpell::getName(void) const
+std::string const &ASpell::getName() const
 {
     return this->_name;
 }
 
-std::string const &ASpell::getEffects(void) const
+std::string const &ASpell::getEffects() const
 {
     return this->_effects;
 }

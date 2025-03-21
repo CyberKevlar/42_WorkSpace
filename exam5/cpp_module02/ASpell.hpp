@@ -12,6 +12,7 @@ class ASpell
         std::string _effects;
 
         ASpell();
+        
     public:
         ASpell(const std::string &name, const std::string &effects);
         ASpell(const ASpell &copy);

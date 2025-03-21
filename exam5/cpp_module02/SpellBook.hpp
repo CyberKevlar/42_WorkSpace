@@ -11,6 +11,7 @@ class SpellBook
 
         SpellBook(SpellBook const &copy);
 		SpellBook &operator=(SpellBook const &src);
+        
     public:
         SpellBook();
         virtual ~SpellBook();

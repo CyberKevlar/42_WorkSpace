@@ -11,6 +11,7 @@ class Warlock
         Warlock();
         Warlock(const Warlock &copy);
         Warlock &operator=(const Warlock &src);
+        
     public:
         Warlock(const std::string &name, const std::string &title);
         ~Warlock();

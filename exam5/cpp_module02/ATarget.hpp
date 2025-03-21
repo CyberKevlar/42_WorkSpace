@@ -11,6 +11,7 @@ class ATarget
         std::string _type;
 
         ATarget();
+        
     public:
         ATarget(const std::string &type);
         ATarget(const ATarget &copy);
