@@ -1,21 +1,24 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <netinet/in.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-typedef struct client {
-    int id;
-    char msg[100000];
-} t_client;
+typedef struct	client {
+    int		id;
+    char	msg[500000];
+}				t_client;
 
-t_client clients[1024];
-
-int max = 0;
-int next_id = 0;
-fd_set active, readyRead, readyWrite;
-char bufRead[424242], bufWrite[424242];
+t_client	clients[1024];
+int 		max = 0;
+int 		next_id = 0;
+fd_set		active;
+fd_set		readyRead;
+fd_set		readyWrite;
+char		bufferRead[500000];
+char		bufferWrite[500000];
 
 void exitError(char *str)
 {
@@ -24,12 +27,12 @@ void exitError(char *str)
     exit(1);
 }
 
-void sendAll(int es)
+void sendAll(int client)
 {
-    for(int i = 0; i <= max; i++)
+    for(int fd = 0; fd <= max; fd++)
     {
-        if (FD_ISSET(i, &readyWrite) && i != es)
-            send(i, bufWrite, strlen(bufWrite), 0);
+        if (FD_ISSET(fd, &readyWrite) && (fd != client))
+            send(fd, bufferWrite, strlen(bufferWrite), 0);
     }
 }
 
@@ -37,12 +40,13 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
         exitError("Wrong number of arguments\n");
+		
     int port = atoi(argv[1]);
-
     int serverSock = socket(AF_INET, SOCK_STREAM, 0);
+
     if (serverSock < 0)
         exitError("Fatal error\n");
-
+	
     bzero(clients, sizeof(clients));
     FD_ZERO(&active);
 
@@ -76,16 +80,16 @@ int main(int argc, char **argv)
                 max = (clientSocket > max) ? clientSocket : max;
                 clients[clientSocket].id = next_id++;
                 FD_SET(clientSocket, &active);
-                sprintf(bufWrite, "server: client %d just arrived\n", clients[clientSocket].id);
+                sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientSocket].id);
                 sendAll(clientSocket);
                 break;
             }
             if (FD_ISSET(fd, &readyRead) && fd != serverSock)
             {
-                int read = recv(fd, bufRead, 424242, 0);
+                int read = recv(fd, bufferRead, 424242, 0);
                 if (read <= 0)
                 {
-                    sprintf(bufWrite, "server: client %d just left\n", clients[fd].id);
+                    sprintf(bufferWrite, "server: client %d just left\n", clients[fd].id);
                     sendAll(fd);
                     FD_CLR(fd, &active);
                     close(fd);
@@ -95,11 +99,11 @@ int main(int argc, char **argv)
                 {
                     for (int i = 0, j = strlen(clients[fd].msg); i < read; i++, j++)
                     {
-                        clients[fd].msg[j] = bufRead[i];
+                        clients[fd].msg[j] = bufferRead[i];
                         if (clients[fd].msg[j] == '\n')
                         {
                             clients[fd].msg[j] = '\0';
-                            sprintf(bufWrite, "client %d: %s\n", clients[fd].id, clients[fd].msg);
+                            sprintf(bufferWrite, "client %d: %s\n", clients[fd].id, clients[fd].msg);
                             sendAll(fd);
                             bzero(&clients[fd].msg, strlen(clients[fd].msg));
                             j = -1;
