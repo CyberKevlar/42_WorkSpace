@@ -1,24 +1,25 @@
-#include <string.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <netinet/in.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-typedef struct	client {
-    int		id;
-    char	msg[500000];
-}				t_client;
+typedef struct  client
+{
+    int     id;
+    char    msg[500000];
+}               t_client;
 
-t_client	clients[1024];
-int 		max = 0;
-int 		next_id = 0;
-fd_set		active;
-fd_set		readyRead;
-fd_set		readyWrite;
-char		bufferRead[500000];
-char		bufferWrite[500000];
+t_client    clients[1024];
+int         max_fd = 0;
+int         next_id = 0;
+char        bufferRead[500000];
+char        bufferWrite[500000];
+fd_set      active;
+fd_set      readyRead;
+fd_set      readyWrite;
 
 void exitError(char *str)
 {
@@ -29,28 +30,27 @@ void exitError(char *str)
 
 void sendAll(int client)
 {
-    for(int fd = 0; fd <= max; fd++)
+    for (int fd = 0; fd <= max_fd; fd++)
     {
         if (FD_ISSET(fd, &readyWrite) && (fd != client))
             send(fd, bufferWrite, strlen(bufferWrite), 0);
     }
 }
 
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
-    if (argc != 2)
+    if (ac != 2)
         exitError("Wrong number of arguments\n");
-		
-    int port = atoi(argv[1]);
+
+    int port = atoi(av[1]);
     int serverSock = socket(AF_INET, SOCK_STREAM, 0);
 
     if (serverSock < 0)
         exitError("Fatal error\n");
-	
-    bzero(clients, sizeof(clients));
-    FD_ZERO(&active);
 
-    max = serverSock;
+    bzero(clients, sizeof(clients));
+    max_fd = serverSock;
+    FD_ZERO(&active);
     FD_SET(serverSock, &active);
 
     struct sockaddr_in addr;
@@ -61,23 +61,24 @@ int main(int argc, char **argv)
 
     if ((bind(serverSock, (const struct sockaddr *)&addr, sizeof(addr))) < 0)
         exitError("Fatal error\n");
+        
     if (listen(serverSock, 128) < 0)
         exitError("Fatal error\n");
 
-    while(1)
+    while (1)
     {
         readyRead = readyWrite = active;
-        if (select(max + 1, &readyRead, &readyWrite, NULL, NULL) < 0)
+        if (select(max_fd + 1, &readyRead, &readyWrite, NULL, NULL) < 0)
             continue;
 
-        for(int fd = 0; fd <= max; fd++)
+        for (int fd = 0; fd <= max_fd; fd++)
         {
             if (FD_ISSET(fd, &readyRead) && fd == serverSock)
             {
                 int clientSocket = accept(serverSock, NULL, NULL);
                 if (clientSocket < 0)
                     continue;
-                max = (clientSocket > max) ? clientSocket : max;
+                max_fd = (clientSocket > max_fd) ? clientSocket : max_fd;
                 clients[clientSocket].id = next_id++;
                 FD_SET(clientSocket, &active);
                 sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientSocket].id);
