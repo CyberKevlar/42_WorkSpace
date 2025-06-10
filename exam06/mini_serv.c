@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <netinet/in.h>
@@ -28,11 +28,11 @@ void exitError(char *str)
     exit(1);
 }
 
-void sendAll(int client)
+void sendAll(int sender)
 {
     for (int fd = 0; fd <= max_fd; fd++)
     {
-        if (FD_ISSET(fd, &readyWrite) && (fd != client))
+        if (FD_ISSET(fd, &readyWrite) && (fd != sender))
             send(fd, bufferWrite, strlen(bufferWrite), 0);
     }
 }
@@ -43,15 +43,15 @@ int main(int ac, char **av)
         exitError("Wrong number of arguments\n");
 
     int port = atoi(av[1]);
-    int serverSock = socket(AF_INET, SOCK_STREAM, 0);
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (serverSock < 0)
+    if (serverSocket < 0)
         exitError("Fatal error\n");
 
     bzero(clients, sizeof(clients));
-    max_fd = serverSock;
+    max_fd = serverSocket;
     FD_ZERO(&active);
-    FD_SET(serverSock, &active);
+    FD_SET(serverSocket, &active);
 
     struct sockaddr_in addr;
     socklen_t addr_len = sizeof(addr);
@@ -59,10 +59,10 @@ int main(int ac, char **av)
     addr.sin_addr.s_addr = (1 << 24) + 127; // "127.0.0.1", in network order
     addr.sin_port = htons(port);
 
-    if ((bind(serverSock, (const struct sockaddr *)&addr, sizeof(addr))) < 0)
+    if ((bind(serverSocket, (const struct sockaddr *)&addr, sizeof(addr))) < 0)
         exitError("Fatal error\n");
         
-    if (listen(serverSock, 128) < 0)
+    if (listen(serverSocket, 128) < 0)
         exitError("Fatal error\n");
 
     while (1)
@@ -73,9 +73,9 @@ int main(int ac, char **av)
 
         for (int fd = 0; fd <= max_fd; fd++)
         {
-            if (FD_ISSET(fd, &readyRead) && fd == serverSock)
+            if (FD_ISSET(fd, &readyRead) && fd == serverSocket)
             {
-                int clientSocket = accept(serverSock, NULL, NULL);
+                int clientSocket = accept(serverSocket, NULL, NULL);
                 if (clientSocket < 0)
                     continue;
                 max_fd = (clientSocket > max_fd) ? clientSocket : max_fd;
@@ -85,7 +85,7 @@ int main(int ac, char **av)
                 sendAll(clientSocket);
                 break;
             }
-            if (FD_ISSET(fd, &readyRead) && fd != serverSock)
+            if (FD_ISSET(fd, &readyRead) && fd != serverSocket)
             {
                 int read = recv(fd, bufferRead, 424242, 0);
                 if (read <= 0)
