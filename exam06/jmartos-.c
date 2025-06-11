@@ -6,25 +6,25 @@
 #include <sys/select.h>
 #include <netinet/in.h>
 
-typedef struct  s_client
+typedef struct  client
 {
     int     id;
-    char    msg[400000];
+    char    msg[500000];
 }               t_client;
 
-t_client    clients[2048];
+t_client    clients[1024];
 int         max_fd = 0;
 int         next_id = 0;
-char        bufferRead[400000];
-char        bufferWrite[400000];
-fd_set      current;
+char        bufferRead[500000];
+char        bufferWrite[500000];
+fd_set      active;
 fd_set      readyRead;
 fd_set      readyWrite;
 
 void exitError(char *str)
 {
-    write(2, str, strlen(str));
-	write(2, "\n", 1);
+    if (str)
+        write(2, str, strlen(str));
     exit(1);
 }
 
@@ -40,35 +40,34 @@ void sendAll(int sender)
 int main(int ac, char **av)
 {
     if (ac != 2)
-        exitError("Wrong number of arguments");
+        exitError("Wrong number of arguments\n");
 
+    int port = atoi(av[1]);
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (serverSocket < 0)
-        exitError("Fatal error");
+        exitError("Fatal error\n");
 
+    bzero(clients, sizeof(clients));
     max_fd = serverSocket;
+    FD_ZERO(&active);
+    FD_SET(serverSocket, &active);
+
     struct sockaddr_in addr;
     socklen_t addr_len = sizeof(addr);
-    bzero(clients, sizeof(clients));
-    bzero(&addr, sizeof(addr));
-    FD_ZERO(&current);
-    FD_SET(serverSocket, &current);
-
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = (1 << 24) + 127; // "127.0.0.1", in network order
-    addr.sin_port = htons(atoi(av[1]));
+    addr.sin_port = htons(port);
 
-    if (bind(serverSocket, (const struct sockaddr *)&addr, sizeof(addr)) < 0)
-        exitError("Fatal error");
+    if ((bind(serverSocket, (const struct sockaddr *)&addr, sizeof(addr))) < 0)
+        exitError("Fatal error\n");
         
     if (listen(serverSocket, 128) < 0)
-        exitError("Fatal error");
+        exitError("Fatal error\n");
 
     while (1)
     {
-        readyRead = readyWrite = current;
-
+        readyRead = readyWrite = active;
         if (select(max_fd + 1, &readyRead, &readyWrite, NULL, NULL) < 0)
             continue;
 
@@ -77,13 +76,11 @@ int main(int ac, char **av)
             if (FD_ISSET(fd, &readyRead) && fd == serverSocket)
             {
                 int clientSocket = accept(serverSocket, NULL, NULL);
-                
                 if (clientSocket < 0)
                     continue;
-
                 max_fd = (clientSocket > max_fd) ? clientSocket : max_fd;
                 clients[clientSocket].id = next_id++;
-                FD_SET(clientSocket, &current);
+                FD_SET(clientSocket, &active);
                 sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientSocket].id);
                 sendAll(clientSocket);
                 break;
@@ -95,7 +92,7 @@ int main(int ac, char **av)
                 {
                     sprintf(bufferWrite, "server: client %d just left\n", clients[fd].id);
                     sendAll(fd);
-                    FD_CLR(fd, &current);
+                    FD_CLR(fd, &active);
                     close(fd);
                     break;
                 }
@@ -118,5 +115,4 @@ int main(int ac, char **av)
             }
         }
     }
-    return 0;
 }
