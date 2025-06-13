@@ -9,14 +9,14 @@
 typedef struct  s_client
 {
     int     id;
-    char    msg[200000];
+    char    msg[370000];
 }               t_client;
 
 t_client    clients[2048];
 int         maxFd = 0;
 int         nextId = 0;
-char        bufferRead[200000];
-char        bufferWrite[200000];
+char        bufferRead[400000];
+char        bufferWrite[400000];
 fd_set      current;
 fd_set      readyRead;
 fd_set      readyWrite;
@@ -24,7 +24,7 @@ fd_set      readyWrite;
 void exitError(char *str)
 {
     write(2, str, strlen(str));
-	write(2, "\n", 1);
+    write(2, "\n", 1);
     exit(1);
 }
 
@@ -42,25 +42,27 @@ int main(int ac, char **av)
     if (ac != 2)
         exitError("Wrong number of arguments");
 
+    struct sockaddr_in address;
+    socklen_t len = sizeof(struct sockaddr_in);
     int serverFd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (serverFd < 0)
         exitError("Fatal error");
 
     maxFd = serverFd;
-    bzero(clients, sizeof(clients));
+
     FD_ZERO(&current);
     FD_SET(serverFd, &current);
-
-    struct sockaddr_in address;
+    bzero(clients, sizeof(clients));
+    bzero(&address, sizeof(address));
 
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = 0x01000000 + 127;
+    address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     address.sin_port = htons(atoi(av[1]));
 
     if (bind(serverFd, (const struct sockaddr *)&address, sizeof(address)) < 0)
         exitError("Fatal error");
-        
+
     if (listen(serverFd, 128) < 0)
         exitError("Fatal error");
 
@@ -75,11 +77,10 @@ int main(int ac, char **av)
         {
             if (FD_ISSET(fd, &readyRead) && fd == serverFd)
             {
-                int clientFd = accept(serverFd, NULL, NULL);
-                
+                int clientFd = accept(serverFd, (struct sockaddr *)&address, &len);
                 if (clientFd < 0)
                     continue;
-                if(clientFd > maxFd)
+                if (clientFd > maxFd)
                     maxFd = clientFd;
                 clients[clientFd].id = nextId++;
                 FD_SET(clientFd, &current);
@@ -89,29 +90,27 @@ int main(int ac, char **av)
             }
             else
             {
-                int read = recv(fd, bufferRead, sizeof(bufferRead), 0);
-                if (read <= 0)
+                int readBytes = recv(fd, bufferRead, sizeof(bufferRead), 0);
+                if (readBytes <= 0)
                 {
                     sprintf(bufferWrite, "server: client %d just left\n", clients[fd].id);
                     sendAll(fd);
                     FD_CLR(fd, &current);
+                    bzero(clients[fd].msg, sizeof(clients[fd].msg));
                     close(fd);
                     break;
                 }
                 else
                 {
-                    for (int i = 0, j = strlen(clients[fd].msg); i < read; i++, j++)
+                    for (int i = 0, j = strlen(clients[fd].msg); i < readBytes; i++, j++)
                     {
                         clients[fd].msg[j] = bufferRead[i];
                         if (clients[fd].msg[j] == '\n')
                         {
-                            if (strlen(clients[fd].msg) > 199950)
-                                clients[fd].msg[199950] = '\0';
-                            else
-                                clients[fd].msg[j] = '\0';
+                            clients[fd].msg[j] = '\0';
                             sprintf(bufferWrite, "client %d: %s\n", clients[fd].id, clients[fd].msg);
                             sendAll(fd);
-                            bzero(&clients[fd].msg, strlen(clients[fd].msg));
+                            bzero(clients[fd].msg, sizeof(clients[fd].msg));
                             j = -1;
                         }
                     }
