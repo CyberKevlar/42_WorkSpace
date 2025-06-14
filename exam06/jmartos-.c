@@ -13,13 +13,13 @@ typedef struct  s_client
 }               t_client;
 
 t_client    clients[2048];
+fd_set      setCurrent;
+fd_set      setRead;
+fd_set      setWrite;
 int         maxFd = 0;
 int         nextId = 0;
 char        bufferRead[400000];
 char        bufferWrite[400000];
-fd_set      current;
-fd_set      readyRead;
-fd_set      readyWrite;
 
 void exitError(char *str)
 {
@@ -32,11 +32,11 @@ void sendAll(int sender)
 {
     for (int fd = 0; fd <= maxFd; fd++)
     {
-        if (FD_ISSET(fd, &current) && (fd != sender))
+        if (FD_ISSET(fd, &setWrite) && (fd != sender))
         {
             if (send(fd, bufferWrite, strlen(bufferWrite), 0) == -1)
             {
-                FD_CLR(fd, &current);
+                FD_CLR(fd, &setCurrent);
                 close(fd);
             }
         }
@@ -49,7 +49,7 @@ int main(int ac, char **av)
         exitError("Wrong number of arguments");
 
     struct sockaddr_in address;
-    socklen_t len = sizeof(struct sockaddr_in);
+    socklen_t len = sizeof(struct sockaddr);
     int serverFd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (serverFd == -1)
@@ -57,8 +57,9 @@ int main(int ac, char **av)
 
     maxFd = serverFd;
 
-    FD_ZERO(&current);
-    FD_SET(serverFd, &current);
+    FD_ZERO(&setCurrent);
+    FD_SET(serverFd, &setCurrent);
+
     bzero(clients, sizeof(clients));
     bzero(&address, sizeof(address));
 
@@ -74,25 +75,28 @@ int main(int ac, char **av)
 
     while (1)
     {
-        readyRead = readyWrite = current;
+        setRead = setWrite = setCurrent;
 
-        if (select(maxFd + 1, &readyRead, &readyWrite, 0, 0) == -1)
+        if (select(maxFd + 1, &setRead, &setWrite, 0, 0) == -1)
             continue ;
 
         for (int fd = 0; fd <= maxFd; fd++)
         {
-            if (FD_ISSET(fd, &readyRead) && fd == serverFd)
+            if (FD_ISSET(fd, &setRead))
             {
-                int clientFd = accept(serverFd, (struct sockaddr *)&address, &len);
-                if (clientFd == -1)
-                    continue;
-                if (clientFd > maxFd)
-                    maxFd = clientFd;
-                clients[clientFd].id = nextId++;
-                FD_SET(clientFd, &current);
-                sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientFd].id);
-                sendAll(clientFd);
-                break ;
+                if (fd == serverFd)
+                {
+                    int clientFd = accept(fd, (struct sockaddr *)&address, &len);
+                    if (clientFd == -1)
+                        continue;
+                    if (clientFd > maxFd)
+                        maxFd = clientFd;
+                    clients[clientFd].id = nextId++;
+                    FD_SET(clientFd, &setCurrent);
+                    sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientFd].id);
+                    sendAll(clientFd);
+                    break ;
+                }
             }
             else
             {
@@ -101,8 +105,8 @@ int main(int ac, char **av)
                 {
                     sprintf(bufferWrite, "server: client %d just left\n", clients[fd].id);
                     sendAll(fd);
-                    FD_CLR(fd, &current);
-                    bzero(clients[fd].msg, sizeof(clients[fd].msg));
+                    FD_CLR(fd, &setCurrent);
+                    bzero(clients[fd].msg, strlen(clients[fd].msg));
                     close(fd);
                     break ;
                 }
@@ -116,7 +120,7 @@ int main(int ac, char **av)
                             clients[fd].msg[j] = '\0';
                             sprintf(bufferWrite, "client %d: %s\n", clients[fd].id, clients[fd].msg);
                             sendAll(fd);
-                            bzero(clients[fd].msg, sizeof(clients[fd].msg));
+                            bzero(clients[fd].msg, strlen(clients[fd].msg));
                             j = -1;
                         }
                     }

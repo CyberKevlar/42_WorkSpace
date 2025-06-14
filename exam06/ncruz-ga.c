@@ -26,7 +26,7 @@ void	err(char *msg){
 }
 
 void	send_to_all(int except){
-	printf("%s", send_buffer);
+	//printf("%s", send_buffer);
 	for (int fd = 0; fd <= maxfd; fd++){
 		if (FD_ISSET(fd, &write_set) && fd != except){
 			if (send(fd, send_buffer, strlen(send_buffer), 0) == -1)
