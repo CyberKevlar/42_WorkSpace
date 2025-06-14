@@ -36,7 +36,6 @@ void sendAll(int sender)
         {
             if (send(fd, bufferWrite, strlen(bufferWrite), 0) == -1)
             {
-                perror("send error");
                 FD_CLR(fd, &current);
                 close(fd);
             }
