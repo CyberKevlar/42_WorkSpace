@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <sys/select.h>
 #include <netinet/in.h>
 
 typedef struct  s_client
@@ -33,13 +32,7 @@ void send_to_all(int fd_sender)
     for (int fd = 0; fd <= max_fd; fd++)
     {
         if (FD_ISSET(fd, &set_write) && (fd != fd_sender))
-        {
-            if (send(fd, buffer_write, strlen(buffer_write), 0) == -1)
-            {
-                FD_CLR(fd, &set_current);
-                close(fd);
-            }
-        }
+            send(fd, buffer_write, strlen(buffer_write), 0);
     }
 }
 
