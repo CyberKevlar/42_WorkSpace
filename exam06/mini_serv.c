@@ -32,8 +32,15 @@ void sendAll(int sender)
 {
     for (int fd = 0; fd <= maxFd; fd++)
     {
-        if (FD_ISSET(fd, &readyWrite) && (fd != sender))
-            send(fd, bufferWrite, strlen(bufferWrite), 0);
+        if (FD_ISSET(fd, &current) && (fd != sender))
+        {
+            if (send(fd, bufferWrite, strlen(bufferWrite), 0) == -1)
+            {
+                perror("send error");
+                FD_CLR(fd, &current);
+                close(fd);
+            }
+        }
     }
 }
 
@@ -46,7 +53,7 @@ int main(int ac, char **av)
     socklen_t len = sizeof(struct sockaddr_in);
     int serverFd = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (serverFd < 0)
+    if (serverFd == -1)
         exitError("Fatal error");
 
     maxFd = serverFd;
@@ -60,25 +67,25 @@ int main(int ac, char **av)
     address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     address.sin_port = htons(atoi(av[1]));
 
-    if (bind(serverFd, (const struct sockaddr *)&address, sizeof(address)) < 0)
+    if (bind(serverFd, (const struct sockaddr *)&address, sizeof(address)) == -1)
         exitError("Fatal error");
 
-    if (listen(serverFd, 128) < 0)
+    if (listen(serverFd, 100) == -1)
         exitError("Fatal error");
 
     while (1)
     {
         readyRead = readyWrite = current;
 
-        if (select(maxFd + 1, &readyRead, &readyWrite, NULL, NULL) < 0)
-            continue;
+        if (select(maxFd + 1, &readyRead, &readyWrite, 0, 0) == -1)
+            continue ;
 
         for (int fd = 0; fd <= maxFd; fd++)
         {
             if (FD_ISSET(fd, &readyRead) && fd == serverFd)
             {
                 int clientFd = accept(serverFd, (struct sockaddr *)&address, &len);
-                if (clientFd < 0)
+                if (clientFd == -1)
                     continue;
                 if (clientFd > maxFd)
                     maxFd = clientFd;
@@ -86,7 +93,7 @@ int main(int ac, char **av)
                 FD_SET(clientFd, &current);
                 sprintf(bufferWrite, "server: client %d just arrived\n", clients[clientFd].id);
                 sendAll(clientFd);
-                break;
+                break ;
             }
             else
             {
@@ -98,7 +105,7 @@ int main(int ac, char **av)
                     FD_CLR(fd, &current);
                     bzero(clients[fd].msg, sizeof(clients[fd].msg));
                     close(fd);
-                    break;
+                    break ;
                 }
                 else
                 {
