@@ -93,7 +93,9 @@ int main() {
         printf("server acccept the client...\n");
 }
 
-// PRUEBA V.1 DE EXAMEN MADE IN YO MISMO!!!
+//////////////////////////////////////////////
+// PRUEBA V.1 DE EXAMEN MADE IN YO MISMO!!! //
+//////////////////////////////////////////////
 
 #include <unistd.h>
 #include <stdio.h>
