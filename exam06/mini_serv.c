@@ -12,10 +12,10 @@ typedef struct s_client
 } t_client;
 
 t_client clients[2048];
-fd_set fd_current;
+fd_set fd_actives;
 fd_set fd_read;
 fd_set fd_write;
-int max_fd = 0;
+int fd_max = 0;
 int next_id = 0;
 char buffer_read[400000];
 char buffer_write[400000];
@@ -29,10 +29,10 @@ void exit_error(char *str)
 
 void send_to_all(int fd_sender)
 {
-    for (int fd = 0; fd <= max_fd; fd++)
+    for (int fd_client = 0; fd_client <= fd_max; fd_client++)
     {
-        if (FD_ISSET(fd, &fd_write) && (fd != fd_sender))
-            send(fd, buffer_write, strlen(buffer_write), 0);
+        if (FD_ISSET(fd_client, &fd_write) && (fd_client != fd_sender))
+            send(fd_client, buffer_write, strlen(buffer_write), 0);
     }
 }
 
@@ -43,76 +43,76 @@ int main(int ac, char **av)
 
     struct sockaddr_in server_address;
     socklen_t len = sizeof(struct sockaddr);
-    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int fd_server = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (server_fd == -1)
+    if (fd_server == -1)
         exit_error("Fatal error");
 
-    max_fd = server_fd;
+    fd_max = fd_server;
 
-    FD_ZERO(&fd_current);
-    FD_SET(server_fd, &fd_current);
+    FD_ZERO(&fd_actives);
+    FD_SET(fd_server, &fd_actives);
 
     bzero(clients, sizeof(clients));
     bzero(&server_address, sizeof(server_address));
 
     server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    server_address.sin_addr.s_addr = htonl(2130706433);
     server_address.sin_port = htons(atoi(av[1]));
 
-    if (bind(server_fd, (const struct sockaddr *)&server_address, sizeof(server_address)) == -1)
+    if (bind(fd_server, (const struct sockaddr *)&server_address, sizeof(server_address)) == -1)
         exit_error("Fatal error");
 
-    if (listen(server_fd, 100) == -1)
+    if (listen(fd_server, 100) == -1)
         exit_error("Fatal error");
 
     while (1)
     {
-        fd_read = fd_write = fd_current;
+        fd_read = fd_write = fd_actives;
 
-        if (select(max_fd + 1, &fd_read, &fd_write, 0, 0) == -1)
-            continue;
+        if (select(fd_max + 1, &fd_read, &fd_write, 0, 0) == -1) // ASI SABEMOS SI ALGUIEN TIENE ALGO PARA LEER O ESCRIBIR
+            continue ;
 
-        for (int fd = 0; fd <= max_fd; fd++)
+        for (int fd_client = 0; fd_client <= fd_max; fd_client++) // RECORRE TODOS LOS CLIENTES, INCLUYENDO EL SERVIDOR.
         {
-            if (FD_ISSET(fd, &fd_read))
+            if (FD_ISSET(fd_client, &fd_read)) // ¿HAY ALGUN CLIENTE TIENE ALGO LEIDO?
             {
-                if (fd == server_fd)
+                if (fd_client == fd_server) // SI FD_CLIENT LLEGA A FD_SERVER ES PORQUE UN CLIENTE QUIERE CONECTARSE.
                 {
-                    int client_fd = accept(fd, (struct sockaddr *)&server_address, &len);
-                    if (client_fd == -1)
+                    int fd_new = accept(fd_client, (struct sockaddr *)&server_address, &len);
+                    if (fd_new == -1)
                         continue;
-                    if (client_fd > max_fd)
-                        max_fd = client_fd;
-                    clients[client_fd].id = next_id++;
-                    FD_SET(client_fd, &fd_current);
-                    sprintf(buffer_write, "server: client %d just arrived\n", clients[client_fd].id);
-                    send_to_all(client_fd);
-                    break;
+                    if (fd_new > fd_max)
+                        fd_max = fd_new;
+                    clients[fd_new].id = next_id++;
+                    FD_SET(fd_new, &fd_actives);
+                    sprintf(buffer_write, "server: client %d just arrived\n", clients[fd_new].id);
+                    send_to_all(fd_new);
+                    break ;
                 }
-                else
+                else // SI EL CLIENTE ES UN CLIENTE QUE YA EXISTE COMPROBAMOS SU MENSAJE POR SI TIENE ALGO O NO.
                 {
-                    int read_bytes = recv(fd, buffer_read, sizeof(buffer_read), 0);
-                    if (read_bytes <= 0)
+                    int bytes = recv(fd_client, buffer_read, sizeof(buffer_read), 0); // COMPROBAMOS QUE TAN LARGO ES EL MENSAJE.
+                    if (bytes <= 0) // SI NO HAY NADA QUE LEER ES QUE UN CLIENTE VA A DESCONECTARSE.
                     {
-                        sprintf(buffer_write, "server: client %d just left\n", clients[fd].id);
-                        send_to_all(fd);
-                        FD_CLR(fd, &fd_current);
-                        bzero(clients[fd].msg, strlen(clients[fd].msg));
-                        close(fd);
-                        break;
+                        sprintf(buffer_write, "server: client %d just left\n", clients[fd_client].id);
+                        send_to_all(fd_client);
+                        FD_CLR(fd_client, &fd_actives);
+                        bzero(clients[fd_client].msg, strlen(clients[fd_client].msg));
+                        close(fd_client);
+                        break ;
                     }
-                    else
+                    else // SI HAY ALGO QUE LEER, LO PROCESAMOS Y LO ENVIAMOS A TODOS LOS CLIENTES.
                     {
-                        for (int i = 0, j = strlen(clients[fd].msg); i < read_bytes; i++, j++)
+                        for (int i = 0, j = strlen(clients[fd_client].msg); i < bytes; i++, j++)
                         {
-                            clients[fd].msg[j] = buffer_read[i];
-                            if (clients[fd].msg[j] == '\n')
+                            clients[fd_client].msg[j] = buffer_read[i];
+                            if (clients[fd_client].msg[j] == '\n')
                             {
-                                clients[fd].msg[j] = '\0';
-                                sprintf(buffer_write, "client %d: %s\n", clients[fd].id, clients[fd].msg);
-                                send_to_all(fd);
-                                bzero(clients[fd].msg, strlen(clients[fd].msg));
+                                clients[fd_client].msg[j] = '\0';
+                                sprintf(buffer_write, "client %d: %s\n", clients[fd_client].id, clients[fd_client].msg);
+                                send_to_all(fd_client);
+                                bzero(clients[fd_client].msg, strlen(clients[fd_client].msg));
                                 j = -1;
                             }
                         }
