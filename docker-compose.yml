@@ -1,51 +1,13 @@
 services:
   # ----------------------- DOCKERS ----------------------- #
 
-  nginx:
-    container_name: nginx
+  server:
+    container_name: server
     build:
-      context: ./srcs/backend/nginx
-      args:
-        - HOST_NAME=${HOST_NAME-localhost}
-    ports:
-      - "8443:443"
-    networks:
-      - frontend-net
-      - backend-net
-    restart: unless-stopped
-
-  gateway:
-    container_name: gateway
-    build:
-      context: ./srcs/backend/gateway
+      context: ./P1
       dockerfile: Dockerfile
-    environment:
-      - SERVICE_URL=gateway:3000
-      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL-http://auth:4000}
-      - TOURNAMENT_SERVICE_URL=${TOURNAMENT_SERVICE_URL-http://tournament:8080}
-      - GAME_SERVICE_URL=${GAME_SERVICE_URL-http://game:8080}
-      - SPRINTER_SERVICE_URL=${GAME_SERVICE_URL-http://sprinter:8080}
-      - JWT_SECRET=${JWT_SECRET}
-    networks:
-      - backend-net
-      - service-net
     restart: unless-stopped
 
 # ------------------------- VOLUMES ------------------------ #
 
-volumes:
-  auth_data:
-    name: auth_data
-
 # ------------------------- NETWORK ------------------------ #
-
-networks:
-  frontend-net:
-    name: frontend-net
-    driver: bridge
-  backend-net:
-    name: backend-net
-    driver: bridge
-  service-net:
-    name: service-net
-    driver: bridge

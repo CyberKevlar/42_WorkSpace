@@ -1,0 +1,11 @@
+FUENTES DE INFORMACION
+
+https://voidnull.es/instalacion-y-configuracion-de-gns3/
+
+DOCKERFILE
+
+En el dockerfile debemos especificar primero que imagen o servicio vamos a usar. En el caso del servicio GNS3
+el subject espedifica que tenemos que instalar una imagen con una distro de Linux y todo lo necesario para
+que GNS3 funcione correctamente, como las librerias y paquetes con router y dispositivos de red.
+(ver dockerfile en ./P1)
+
