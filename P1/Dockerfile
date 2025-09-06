@@ -4,10 +4,8 @@ FROM ubuntu:latest
 RUN apt update && apt upgrade -y
 RUN apt install -y software-properties-common
 
-# Agregar repositorio de GNS3
+# Agregar repositorio de GNS3 y actualiza
 RUN add-apt-repository ppa:gns3/ppa -y
-
-# Actualizar después de agregar el repositorio
 RUN apt update
 
 # Instalar GNS3 y dependencias
@@ -26,3 +24,5 @@ RUN usermod -aG wireshark gns3_user || true
 USER gns3_user
 WORKDIR /home/gns3_user
 
+# Iniciar GNS3 en modo gráfico
+CMD ["/usr/bin/gns3"]

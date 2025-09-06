@@ -8,9 +8,10 @@ echo "Ejecutando GNS3 en Docker..."
 echo "Imagen: $IMAGE_NAME"
 echo ""
 
-# Verificar si la imagen existe
+# Verificar si la imagen existe y cambiamos al directorio del script a donde está el Dockerfile
 if ! docker image inspect $IMAGE_NAME >/dev/null 2>&1; then
     echo "La imagen $IMAGE_NAME no existe. Construyendo..."
+    cd "$(dirname "$0")"
     docker build -t $IMAGE_NAME .
     if [ $? -ne 0 ]; then
         echo "Error al construir la imagen"

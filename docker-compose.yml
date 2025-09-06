@@ -1,12 +1,20 @@
 services:
   # ----------------------- DOCKERS ----------------------- #
 
-  server:
-    container_name: server
+  gns3:
+    container_name: gns3-container
     build:
       context: ./P1
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: "no"                                 # Cambiado a "no" para que no se reinicie automáticamente.
+    stdin_open: true                              # Asi mantenemos la entrada estándar abierta en modo interactivo.
+    tty: true                                     # Opcion de asignar un terminal TTY para que el contenedor pueda ejecutar aplicaciones interactivas.
+    privileged: true                              # Permisos extendidos para acceder a dispositivos del host.
+    network_mode: host                            # Usamos la red en modo 'host' para evitar problemas de red.
+    volumes:                                      # Carpeta local : carpeta en el contenedor
+      - /tmp/.X11-unix:/tmp/.X11-unix             # (GRAFICOS) Montamos el socket de X11 para permitir la comunicación con el servidor X del host.
+      - /dev:/dev                                 # (HARDWARE)Montamos el directorio /dev para que el contenedor pueda acceder a los dispositivos del host.
+      - ./projects:/home/gns3_user/GNS3           # (DATOS)Montamos la carpeta de proyectos para persistencia de datos y evitar perdida de datos si el contenedor se elimina.
 
 # ------------------------- VOLUMES ------------------------ #
 
