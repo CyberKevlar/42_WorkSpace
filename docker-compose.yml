@@ -9,12 +9,20 @@ services:
     restart: "no"                                 # Cambiado a "no" para que no se reinicie automáticamente.
     stdin_open: true                              # Asi mantenemos la entrada estándar abierta en modo interactivo.
     tty: true                                     # Opcion de asignar un terminal TTY para que el contenedor pueda ejecutar aplicaciones interactivas.
-    privileged: true                              # Permisos extendidos para acceder a dispositivos del host.
-    network_mode: host                            # Usamos la red en modo 'host' para evitar problemas de red.
+    privileged: false                             # Permisos en 'false' para que no tenga permisos extendidos y podamos ejecutar como root.
+    cap_add:                                      # Agregamos capabilities específicas necesarias para GNS3
+      - NET_ADMIN                                 # Para administrar interfaces de red
+      - NET_RAW                                   # Para crear paquetes de red raw
+      - SYS_ADMIN                                 # Para operaciones administrativas del sistema
+      - NET_BIND_SERVICE                          # Para dnsmasq (DHCP)
+    network_mode: bridge                          # Usamos la red en modo 'bridge' y no en 'host' para evitar problemas de red y que funcione en cualquier entorno.
+    environment:
+      - DISPLAY=${DISPLAY}                        # Variable de entorno para X11 (necesario para aplicaciones gráficas, y se ejecuta internamente).
+    command: ["/usr/local/bin/start_gns3.sh"]     # Script que inicia libvirtd y luego GNS3
     volumes:                                      # Carpeta local : carpeta en el contenedor
       - /tmp/.X11-unix:/tmp/.X11-unix             # (GRAFICOS) Montamos el socket de X11 para permitir la comunicación con el servidor X del host.
-      - /dev:/dev                                 # (HARDWARE)Montamos el directorio /dev para que el contenedor pueda acceder a los dispositivos del host.
-      - ./projects:/home/gns3_user/GNS3           # (DATOS)Montamos la carpeta de proyectos para persistencia de datos y evitar perdida de datos si el contenedor se elimina.
+      - /dev/net/tun:/dev/net/tun                 # (REDES) Dispositivo TUN para virtualización de red
+      - ./projects:/home/gns3_user/GNS3           # (DATOS) Montamos la carpeta de proyectos para persistencia de datos y evitar perdida de datos si el contenedor se elimina.
 
 # ------------------------- VOLUMES ------------------------ #
 
