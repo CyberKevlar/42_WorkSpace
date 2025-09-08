@@ -1,8 +1,20 @@
-FUENTES DE INFORMACION
+BADASS
+
+Vamos a empezar a desglosar el proyecto desde la raiz, fichero a fichero:
+
+                    docker-compose.yml
+
+En este fichero se especifican los servicios que vamos a usar en el proyecto. En este caso vamos a usar GNS3,
+un 'programa' que nos permite simular redes de ordenadores y dispositivos de red como routers, switches, etc.
+
+Toda la informacion relacionada con GNS3 y como incubarla en docker la hemos sacado de foros y paginas web
+dedicadas a docker en genera y videos de youtube como:
 
 https://voidnull.es/instalacion-y-configuracion-de-gns3/
+https://www.youtube.com/watch?v=x9oC1jR8V0I
+(PONER TODAS LAS FUENTES DE INFORMACION)
 
-DOCKERFILE
+                    DOCKERFILE
 
 En el dockerfile debemos especificar primero que imagen o servicio vamos a usar. En el caso del servicio GNS3
 el subject espedifica que tenemos que instalar una imagen con una distro de Linux y todo lo necesario para

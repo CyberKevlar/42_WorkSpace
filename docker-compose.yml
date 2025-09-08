@@ -4,7 +4,7 @@ services:
   gns3:
     container_name: gns3-container
     build:
-      context: ./P1
+      context: ./gns3
       dockerfile: Dockerfile
     restart: "no"                                 # Cambiado a "no" para que no se reinicie automáticamente.
     stdin_open: true                              # Asi mantenemos la entrada estándar abierta en modo interactivo.
@@ -23,6 +23,12 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix             # (GRAFICOS) Montamos el socket de X11 para permitir la comunicación con el servidor X del host.
       - /dev/net/tun:/dev/net/tun                 # (REDES) Dispositivo TUN para virtualización de red
       - ./projects:/home/gns3_user/GNS3           # (DATOS) Montamos la carpeta de proyectos para persistencia de datos y evitar perdida de datos si el contenedor se elimina.
+  
+  busybox:
+    container_name: busybox-container
+    restart: "no"                                 # Cambiado a "no" para que no se reinicie automáticamente.
+    privileged: false                             # Permisos en 'false' para que no tenga permisos extendidos y podamos ejecutar como root.
+    network_mode: bridge                          # Usamos la red en modo 'bridge' y no en 'host' para evitar problemas de red y que funcione en cualquier entorno.
 
 # ------------------------- VOLUMES ------------------------ #
 
