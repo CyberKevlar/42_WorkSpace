@@ -1,4 +1,6 @@
-FROM ubuntu:24.04
+FROM mirror.gcr.io/library/ubuntu:24.04
+
+#ENV DEBIAN_FRONTEND=noninteractive
 
 # Actualizar sistema e instalar dependencias básicas.
 RUN apt update && apt upgrade -y
@@ -23,7 +25,7 @@ RUN mkdir -p /etc/libvirt/qemu/networks/autostart
 RUN mkdir -p /var/run/libvirt
 RUN mkdir -p /var/lib/libvirt/images
 COPY start_gns3.sh /usr/local/bin/start_gns3.sh
-RUN chmod 777 /usr/local/bin/start_gns3.sh
+RUN chmod 755 /usr/local/bin/start_gns3.sh
 
 # Crear usuario gns3 y agregarlo a los grupos necesarios.
 RUN useradd -m -s /bin/bash gns3_user
