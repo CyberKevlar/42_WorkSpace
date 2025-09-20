@@ -9,16 +9,6 @@ La parte 1 del proyecyo conseiste agroso modo en 3 pasos:
 2. Crear una red con 1 host ligero y 1 router FRR.
 3. Configurar los routers para que se vean entre ellos y puedan intercambiar informacion.
 
-
-
-
-
-
-
-
-
-
-
 Vamos a empezar a desglosar el proyecto desde la raiz, fichero a fichero:
 
                     docker-compose.yml
@@ -39,3 +29,12 @@ En el dockerfile debemos especificar primero que imagen o servicio vamos a usar.
 el subject espedifica que tenemos que instalar una imagen con una distro de Linux y todo lo necesario para
 que GNS3 funcione correctamente, como las librerias y paquetes con router y dispositivos de red.
 (ver dockerfile en ./P1/gns3)
+
+
+
+
+
+
+
+xubuntu-22.04.5-desktop-amd64.iso
+2 vCPU, 4–8 GB RAM, 30–40 GB disco, adaptador puente o NAT+Host-only.

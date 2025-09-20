@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 # Actualizar sistema e instalar dependencias básicas.
 RUN apt update && apt upgrade -y
