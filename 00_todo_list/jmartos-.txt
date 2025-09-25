@@ -48,8 +48,9 @@ sudo apt install git -y
 sudo apt install vim -y
 apt update && apt upgrade -y
 apt install -y software-properties-common
-add-apt-repository ppa:gns3/ppa -y
 apt update && apt upgrade -y
 apt install -y python3-libvirt dnsmasq-base iproute2 iptables
+add-apt-repository ppa:gns3/ppa -y
 apt install -y gns3-gui gns3-server
 apt install -y ubridge wireshark qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager dynamips
+apt update && apt upgrade -y
