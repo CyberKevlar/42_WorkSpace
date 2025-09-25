@@ -34,7 +34,19 @@ que GNS3 funcione correctamente, como las librerias y paquetes con router y disp
 
 
 
+BADASS v2
 
+- Configuracion de la VM ligera para GNS3:
 
 xubuntu-22.04.5-desktop-amd64.iso
 2 vCPU, 4–8 GB RAM, 30–40 GB disco, adaptador puente o NAT+Host-only.
+
+- Instalacion de GNS3 en la VM:
+
+apt update && apt upgrade -y
+apt install -y software-properties-common
+add-apt-repository ppa:gns3/ppa -y
+apt update && apt upgrade -y
+apt install -y python3-libvirt dnsmasq-base iproute2 iptables
+apt install -y gns3-gui gns3-server
+apt install -y ubridge wireshark qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager dynamips
