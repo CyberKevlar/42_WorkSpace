@@ -43,6 +43,9 @@ xubuntu-22.04.5-desktop-amd64.iso
 
 - Instalacion de GNS3 en la VM:
 
+sudo apt update && sudo apt upgrade -y
+sudo apt install git -y
+sudo apt install vim -y
 apt update && apt upgrade -y
 apt install -y software-properties-common
 add-apt-repository ppa:gns3/ppa -y
