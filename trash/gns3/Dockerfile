@@ -1,7 +1,5 @@
 FROM mirror.gcr.io/library/ubuntu:24.04
 
-#ENV DEBIAN_FRONTEND=noninteractive
-
 # Actualizar sistema e instalar dependencias básicas.
 RUN apt update && apt upgrade -y
 RUN apt install -y software-properties-common
