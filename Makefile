@@ -1,5 +1,5 @@
 # DC = COMPOSE_BAKE=true $(DC_CMD) -f ./docker-compose.yml
-DC = docker compose -f ./docker-compose.yml
+DC = docker-compose -f ./docker-compose.yml
 
 # ============================== CONTAINER RULES ==============================
 

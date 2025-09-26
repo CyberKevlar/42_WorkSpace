@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+# Instalamos herramientas básicas de red
+RUN apk add --no-cache iproute2 iputils bash
+
+# Arranca en shell
+CMD ["sh"]

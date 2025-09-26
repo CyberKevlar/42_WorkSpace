@@ -1,9 +1,0 @@
-zebra=yes
-bgpd=yes
-ospfd=yes
-isisd=yes
-
-pimd=no
-ldpd=no
-staticd=no
-fabricd=no
