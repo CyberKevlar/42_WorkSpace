@@ -54,3 +54,6 @@ add apt-repository ppa:gns3/ppa -y
 sudo apt install -y gns3-gui gns3-server
 sudo apt install -y ubridge wireshark qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager dynamips
 sudo apt update && sudo apt upgrade -y
+
+
+sudo usermod -aG-docker <usuario>

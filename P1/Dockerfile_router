@@ -1,4 +1,4 @@
-FROM frrouting/frr:v7.5.1
+FROM frrouting/frr:latest
 
 # Instalamos iputils y bridge
 RUN apk add --no-cache iputils bridge bash
