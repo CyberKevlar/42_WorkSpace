@@ -1,7 +1,6 @@
 #!/bin/sh
 # Router derecho (VARIANTE ESTÁTICA). VTEP + bridge L2 para su host.
 # Requisitos del subject: VNI=10 y bridge br0. Este script configura sólo en runtime.
-
 set -eux
 
 ### Limpieza idempotente
