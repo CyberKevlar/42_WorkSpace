@@ -1,7 +1,0 @@
-brctl addbr br0
-ip link add vxlan10 type vxlan id 10 remote 192.168.100.2 dev eth0 dstport 4789
-ip link set vxlan10 up
-ip link set eth1 up
-ip link set br0 up
-brctl addif br0 eth1
-brctl addif br0 vxlan10

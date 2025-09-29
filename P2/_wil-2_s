@@ -1,0 +1,40 @@
+#!/bin/sh
+# Router derecho (VARIANTE ESTÁTICA). VTEP + bridge L2 para su host.
+# Requisitos del subject: VNI=10 y bridge br0. Este script configura sólo en runtime.
+
+set -eux
+
+### Limpieza idempotente
+ip link set vxlan10 down 2>/dev/null || true
+ip link del vxlan10 2>/dev/null || true
+ip link set br0 down 2>/dev/null || true
+ip link del br0 2>/dev/null || true
+
+### Enlaces físicos
+ip link set dev eth0 up     # hacia el host
+ip link set dev eth1 up     # underlay hacia el otro router
+
+### Underlay L3 entre routers (punto a punto)
+ip addr flush dev eth1
+ip addr add 10.0.0.2/30 dev eth1    # izquierda es 10.0.0.1/30
+
+### Bridge de acceso L2
+ip link add br0 type bridge
+ip link set br0 up
+
+# (Opcional) MTU
+# ip link set dev eth0 mtu 1450
+# ip link set dev br0 mtu 1450
+
+# Puerto de acceso (host) al bridge
+ip link set dev eth0 master br0
+
+### VXLAN estático (unicast) — VNI 10
+ip link add vxlan10 type vxlan id 10 dev eth1 local 10.0.0.2 remote 10.0.0.1 dstport 4789
+ip link set vxlan10 up
+ip link set vxlan10 master br0
+
+### (Opcional) Comprobaciones
+# ip -d link show vxlan10
+# bridge link
+# bridge fdb show br br0
