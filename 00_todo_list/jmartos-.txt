@@ -1,59 +1,52 @@
-BADASS
+/**********/
+/* BADASS */
+/**********/
 
 Este proyecto tiene pretende usar GNS3 para simular redes de ordenadores
 y dispositivos de red como routers, switches, etc.
 
-La parte 1 del proyecyo conseiste agroso modo en 3 pasos:
+El proyecto consiste grosso modo en 3 pasos:
 
-1. Instalar GNS3 en docker.
-2. Crear una red con 1 host ligero y 1 router FRR.
-3. Configurar los routers para que se vean entre ellos y puedan intercambiar informacion.
+1. Instalar GNS3 en un entorno virtual y usar docker para crear host y router.
+2. Crear una red con 1 host y 1 router FRR usando los docker como "plantilla".
+3. 
 
-Vamos a empezar a desglosar el proyecto desde la raiz, fichero a fichero:
-
-                    docker-compose.yml
-
-En este fichero se especifican los servicios que vamos a usar en el proyecto. En este caso vamos a usar GNS3,
-un 'programa' que nos permite simular redes de ordenadores y dispositivos de red como routers, switches, etc.
-
-Toda la informacion relacionada con GNS3 y como incubarla en docker la hemos sacado de foros y paginas web
-dedicadas a docker en genera y videos de youtube como:
-
-https://voidnull.es/instalacion-y-configuracion-de-gns3/
-https://www.youtube.com/watch?v=x9oC1jR8V0I
-(PONER TODAS LAS FUENTES DE INFORMACION)
-
-                    DOCKERFILE
-
-En el dockerfile debemos especificar primero que imagen o servicio vamos a usar. En el caso del servicio GNS3
-el subject espedifica que tenemos que instalar una imagen con una distro de Linux y todo lo necesario para
-que GNS3 funcione correctamente, como las librerias y paquetes con router y dispositivos de red.
-(ver dockerfile en ./P1/gns3)
-
-
-
-
-
-BADASS v2
+Vamos a empezar configurando una maquina virtual libera usando Xubuntu:
 
 - Configuracion de la VM ligera para GNS3:
 
 xubuntu-22.04.5-desktop-amd64.iso
 2 vCPU, 4–8 GB RAM, 30–40 GB disco, adaptador puente o NAT+Host-only.
 
-- Instalacion de GNS3 en la VM:
+- Instalacion de GNS3 en la VM y demsa configuraciones:
 
 sudo apt update && sudo apt upgrade -y
-sudo apt install git -y
-sudo apt install vim -y
-sudo apt update && sudo apt upgrade -y
+sudo apt install -y git
+sudo apt install -y vim
 sudo apt install -y software-properties-common
-sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3-libvirt dnsmasq-base iproute2 iptables
-add apt-repository ppa:gns3/ppa -y
-sudo apt install -y gns3-gui gns3-server
 sudo apt install -y ubridge wireshark qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager dynamips
+sudo apt install -y docker
+sudo apt install -y gnome-terminal
+sudo add apt-repository ppa:gns3/ppa -y
+sudo apt install -y gns3-gui gns3-server
 sudo apt update && sudo apt upgrade -y
+sudo usermod -aG docker <usuario>
+sudo chown <usuario> /var/run/docker.sock
+
+- Comandos para ejecucion de imagenes docker:
+
+docker images
+docker build -t <nombre para la imagen> -f <ruta del Dockerfile que vamos a crear> .
+
+- Abrimos GNS3 y configuramos las preferencias de los docker en GNS3:
+
+Edit > Preferences > Docker > Docker containers > New
+
+Ahi tenemos que poner las imagenes que hemos creado con docker build. Ojo con
+los nombres y no poner las predeterminadas sino las que hemos creado con los nombre.
+Le damos a los host 1 red ethernet y a los router minimo 4.
+
+Asi ya tendremos los "templates" para crear los nodos en GNS3.
 
 
-sudo usermod -aG-docker <usuario>

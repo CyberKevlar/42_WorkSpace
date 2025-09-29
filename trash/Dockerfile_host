@@ -1,0 +1,12 @@
+# Creamos una imagen docker basada en Alpine (ya trae busybox de serie).
+FROM alpine:latest
+
+# Instalamos:
+RUN apk add --no-cache bash 
+RUN apk add --no-cache vim
+RUN apk add --no-cache busybox-extras
+RUN apk add --no-cache tcpdump
+RUN apk add --no-cache traceroute
+
+# Mantenemos el contenedor abierto con una terminal por defecto.
+ENTRYPOINT ["/bin/bash"]
