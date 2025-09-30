@@ -1,40 +1,24 @@
 #!/bin/sh
-# Router izquierdo (VARIANTE ESTÁTICA). VTEP + bridge L2 para el host.
-# Requisitos del subject: VNI=10 y bridge br0. Este script configura sólo en runtime. 
-# Ajusta los nombres de interfaz si en GNS3 difieren.
-
 set -eux
 
-### Limpieza idempotente (por si relanzas)
-ip link set vxlan10 down 2>/dev/null || true
+# limpieza
 ip link del vxlan10 2>/dev/null || true
-ip link set br0 down 2>/dev/null || true
 ip link del br0 2>/dev/null || true
 
-### Enlaces físicos
-ip link set dev eth0 up     # hacia el host
-ip link set dev eth1 up     # underlay hacia el otro router
+# físico
+ip link set eth1 up        # acceso (hacia host)
+ip link set eth0 up        # underlay (hacia “Switch_wil” / otro router)
 
+# underlay L3 /30 por eth0
+ip addr flush dev eth0
+ip addr add 10.42.0.1/30 dev eth0
 
-### Underlay L3 entre routers (punto a punto)
-ip addr flush dev eth1
-ip addr add 10.42.0.1/30 dev eth1    # derecha será 10.42.0.2/30
-
-# Creación del bridge L2 (br0)
+# bridge de acceso
 ip link add br0 type bridge
 ip link set br0 up
+ip link set eth1 master br0
 
-# Puerto de acceso (host) al bridge
-ip link set dev eth0 master br0
-
-### VXLAN estático (unicast) — VNI 10
-#  - local: nuestra IP underlay (10.42.0.1)
-#  - remote: IP underlay del router derecho (10.42.0.2)
-ip link add vxlan10 type vxlan id 10 dev eth1 local 10.42.0.1 remote 10.42.0.2 dstport 4789
+# VXLAN unicast (VNI 10) usando eth0 como underlay
+ip link add vxlan10 type vxlan id 10 dev eth0 local 10.42.0.1 remote 10.42.0.2 dstport 4789
 ip link set vxlan10 up
 ip link set vxlan10 master br0
-
-### (Opcional) Comprobaciones rápidas
-# ip -d link show vxlan10
-# bridge link
-# bridge fdb show br br0

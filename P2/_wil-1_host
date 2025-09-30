@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eux
 
-ip link set dev eth0 up
+ip link set dev eth1 up
