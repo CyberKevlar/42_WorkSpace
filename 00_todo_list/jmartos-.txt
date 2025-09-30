@@ -33,6 +33,7 @@ sudo apt install -y gns3-gui gns3-server
 sudo apt update && sudo apt upgrade -y
 sudo usermod -aG docker <usuario>
 sudo chown <usuario> /var/run/docker.sock
+sudo chmod +x /usr/bin/dumpcap
 
 - Comandos para ejecucion de imagenes docker:
 
