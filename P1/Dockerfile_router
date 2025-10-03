@@ -13,6 +13,7 @@ RUN echo -e "zebra=yes\nbgpd=yes\nospfd=yes\nisisd=yes\n" > /etc/frr/daemons
 COPY start.sh /start.sh
 RUN chmod 777 /start.sh
 ENTRYPOINT ["/bin/bash", "/start.sh"]
+
 #CMD /usr/lib/frr/watchfrr -d zebra bgpd ospfd isisd && tail -f /dev/null
 #start the daemons in background && keep the container up
 
