@@ -10,7 +10,8 @@ RUN touch /etc/frr/bgpd.conf /etc/frr/ospfd.conf /etc/frr/isisd.conf \
     && chmod 640 /etc/frr/*.conf
 RUN echo -e "zebra=yes\nbgpd=yes\nospfd=yes\nisisd=yes\n" > /etc/frr/daemons
 
-CMD /usr/lib/frr/watchfrr -d zebra bgpd ospfd isisd && tail -f /dev/null
+CMD ["/usr/lib/frr/watchfrr","zebra","bgpd","ospfd","isisd"]
+#CMD /usr/lib/frr/watchfrr -d zebra bgpd ospfd isisd && tail -f /dev/null
 #start the daemons in background && keep the container up
 
 #routing services:
