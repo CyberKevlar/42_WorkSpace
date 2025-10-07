@@ -1,6 +1,3 @@
-#!/bin/sh
-set -eux
-
 # limpieza
 ip link del vxlan10 2>/dev/null || true
 ip link del br0 2>/dev/null || true
