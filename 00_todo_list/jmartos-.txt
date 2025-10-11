@@ -50,4 +50,7 @@ Le damos a los host 1 red ethernet y a los router minimo 4.
 
 Asi ya tendremos los "templates" para crear los nodos en GNS3.
 
+- Como vamos a configurar las IP's
 
+Para la red virtual VXLAN: 10.0.0.x
+Para la red fisica: 192.168.1.X
