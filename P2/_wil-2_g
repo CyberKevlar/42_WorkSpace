@@ -1,7 +1,7 @@
 # ESTOS COMANDOS HAY QUE APLICARLOS EN LA CONSOLA DEL SWITCH_1 PARA MODO ESTATICO
 
 # eth0: Creamos una ip para a la interfaz eth0 (la que esta del lado del host) del router.
-ip addr add 10.1.1.1/24 dev eth1
+ip addr add 10.1.1.2/24 dev eth1
 ip link set dev eth1 up
 
 # Bridge: añadimos br0 de tipo bridge.
@@ -9,7 +9,7 @@ ip link add br0 type bridge
 ip link set dev br0 up
 
 # VXLAN: creamos la vxlan vxlan10 de tipo vxlan, el id el 10, a traves de la interfaz de red eth0, y por donde se conectara una ip remota a otra local por el puerto 4789.
-ip link add name vxlan10 type vxlan id 10 dev eth1 group 239.1.1.1 local 10.1.1.1 dstport 4789
+ip link add name vxlan10 type vxlan id 10 dev eth1 group 239.1.1.1 dstport 4789
 #ip addr add 20.1.1.1/24 dev vxlan10 
 ip link set dev vxlan10 up
 
