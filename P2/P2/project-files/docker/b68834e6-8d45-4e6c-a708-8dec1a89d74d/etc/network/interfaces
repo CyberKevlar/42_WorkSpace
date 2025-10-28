@@ -1,0 +1,5 @@
+# /etc/network/interfaces.d/_wil-2_host
+auto eth0
+iface eth0 inet static
+	address 192.168.1.11
+	netmask 255.255.255.0

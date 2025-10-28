@@ -1,0 +1,12 @@
+Oct 13 09:59:27.748 HYPERVISOR: Release 0.2.23-amd64/Linux (tag 2023010200)
+Oct 13 09:59:27.748 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 40597.
+Oct 13 09:59:27.763 HYPERVISOR: exec_cmd: hypervisor version 
+Oct 13 09:59:27.763 HYPERVISOR: exec_cmd: hypervisor working_dir /home/badass/42_WorkSpace/P2/P2/project-files/dynamips 
+Oct 13 09:59:27.763 GENERAL: working_dir=/home/badass/42_WorkSpace/P2/P2/project-files/dynamips
+Oct 13 09:59:27.763 HYPERVISOR: exec_cmd: ethsw create switch 
+Oct 13 09:59:28.273 HYPERVISOR: exec_cmd: nio create_udp udp-39db96eb-5774-4358-a499-5796be2ffc3b 10005 127.0.0.1 10004 
+Oct 13 09:59:28.273 HYPERVISOR: exec_cmd: ethsw add_nio switch udp-39db96eb-5774-4358-a499-5796be2ffc3b 
+Oct 13 09:59:28.284 HYPERVISOR: exec_cmd: ethsw set_access_port switch udp-39db96eb-5774-4358-a499-5796be2ffc3b 1 
+Oct 13 09:59:28.323 HYPERVISOR: exec_cmd: nio create_udp udp-7fc28814-e694-42ff-83a7-bb015f1f180a 10007 127.0.0.1 10006 
+Oct 13 09:59:28.323 HYPERVISOR: exec_cmd: ethsw add_nio switch udp-7fc28814-e694-42ff-83a7-bb015f1f180a 
+Oct 13 09:59:28.324 HYPERVISOR: exec_cmd: ethsw set_access_port switch udp-7fc28814-e694-42ff-83a7-bb015f1f180a 1 
