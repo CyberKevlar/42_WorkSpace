@@ -7,36 +7,46 @@ vtysh
 # Abrimos "terminal" de configuracion:
 conf t
 
-# Configuramos el adaptador "eth1", que va a al "eth1" del router-2: 
-interface eth1
-
+# Configuramos el adaptador "eth1", que va a al "eth1" del router-2.
 # Asignamos una IP a la eth del router nodo, y la asignamos a OSPF area 0 (protocolo???):
+# Hacemos esto mismo para las otras 2 interfaces y con la local/loopback.
+# Esta ultima la usaremos para BGP update-source y router-id.
+interface eth1
 ip address 10.1.1.1/30
 ip ospf area 0
-
-# Hacemos esto mismo para las otras 2 interfaces y con la local/loopback:
 interface eth2
-ip address 10.1.1.2/30
+ip address 10.1.1.5/30
 ip ospf area 0
 interface eth3
-ip address 10.1.1.3/30
+ip address 10.1.1.9/30
 ip ospf area 0
 interface lo
-ip address 10.1.1.4/32
+ip address 10.255.255.1/32
 ip ospf area 0
+
+# (???)
+router ospf
+router-id 10.255.255.1
 
 # Configuramos el protocolo de enrutamiento BGP con el AS numero 1 (nos metera en otra subterminal): 
 router bgp 1
+bgp router-id 10.255.255.1
 
-# Creamos un "peer-group" llamado 'ibgp' que vamos a usar para configurar el comportamiento de las sesiones BGP con los demas routers:
+# Creamos los grupos ibgp "peer-group", que vamos a usar para configurar el comportamiento de las sesiones BGP con los demas routers:
 neighbor ibgp peer-group
+
+# (???)
+neighbor ibgp remote-as 1
 
 # La interfaz de loopback es la que usaremos de actualizacion para establecer la sesion BGP:
 neighbor ibgp update-source lo
 
-# La configuracion de BGP usuará un rango de IP para el peer-group que creamos antes:
+# La configuracion de BGP usuará un rango de IP para el peer-group que creamos antes.
+# Esto es para escuchar los grupos dentro del rango de loopbacks de los otros routers.
 # (OJO CON LAS IPS, MUCHOS RANGOS Y MASCARAS DISTINTAS, REVISAR!)
-bgp listen range 40.1.1.0/24 peer-group ibgp
+# NOTA: con la mascara de red /24 permitimos que cualquier router con una direccion de loopback con
+# ese rango se empareje en auto.
+bgp listen range 10.255.255.0/24 peer-group ibgp
 
 # Activamos la "address-family" (???) para la L2VPN EVPN (???)
 address-family l2vpn evpn
@@ -44,7 +54,6 @@ address-family l2vpn evpn
 # Activamos los neighbor y configuramos como si fuera un "route-reflector client":
 neighbor ibgp activate
 neighbor ibgp route-reflector-client
-exit-address-family
 
-# Activamos el protocolo de enrutamiento OSPF:
-router ospf
+# Salimos de las subterminales:
+exit
