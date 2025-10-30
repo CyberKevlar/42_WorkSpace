@@ -1,0 +1,23 @@
+auto eth0
+iface eth0 inet static
+    address 192.168.1.22
+    netmask 255.255.255.0
+
+auto eth1
+iface eth1 inet manual
+
+auto vxlan10
+iface vxlan10 inet manual
+    pre-up ip link add vxlan10 type vxlan id 10 dev eth0 local 192.168.1.22 remote 192.168.1.21 dstport 4789 || true
+    up ip link set vxlan10 up
+    post-down ip link del vxlan10 || true
+
+auto br0
+iface br0 inet static
+    address 10.0.0.2
+    netmask 255.255.255.0
+    pre-up ip link add br0 type bridge || true
+    pre-up ip link set eth1 master br0
+    pre-up ip link set vxlan10 master br0
+    up ip link set br0 up
+    post-down ip link del br0 || true

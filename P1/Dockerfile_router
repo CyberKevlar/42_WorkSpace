@@ -22,4 +22,3 @@ ENTRYPOINT ["/bin/bash", "/start.sh"]
 #   -ospfd: internal routing protocol that calculates the shortest path.
 #   -isisd: internal routing protocol used in large and scalable networks.
 #   -zebra(not a routing service) (orchestrator): internal route manager that applies routes from daemons to the kernel.
-

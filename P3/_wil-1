@@ -1,23 +1,50 @@
 # ESTOS COMANDOS HAY QUE APLICARLOS EN LA CONSOLA DEL SWITCH_1 PARA MODO ESTATICO
 
-# eth0: Creamos una ip para a la interfaz eth0 (la que esta del lado del host) del router.
-ip addr add 10.1.1.1/24 dev eth1
-ip link set dev eth1 up
+# Consola de frrouting, para contruir la BGP:
+vtysh
 
-# Bridge: añadimos br0 de tipo bridge.
-ip link add br0 type bridge
-ip link set dev br0 up
+# A partir de aqui TODO seran comandos de frrouting, ya que es el router que hace de nodo:
+# Abrimos "terminal" de configuracion:
+conf t
 
-# VXLAN: creamos la vxlan vxlan10 de tipo vxlan, el id el 10, a traves de la interfaz de red eth0, y por donde se conectara una ip remota a otra local por el puerto 4789.
-ip link add name vxlan10 type vxlan id 10 dev eth1 group 239.1.1.1 dstport 4789
-#ip addr add 20.1.1.1/24 dev vxlan10 
-ip link set dev vxlan10 up
+# Configuramos el adaptador "eth1", que va a al "eth1" del router-2: 
+interface eth1
 
-# eth1: levantamos la interfaz (???)
-ip link set dev eth0 up
+# Asignamos una IP a la eth del router nodo, y la asignamos a OSPF area 0 (protocolo???):
+ip address 10.1.1.1/30
+ip ospf area 0
 
-# Unimos la interfaz local eth1 y la vxlan10 al puerte br0.
-#brctl addif br0 eth1
-#brctl addif br0 vxlan10
-ip link set dev eth0 master br0
-ip link set dev vxlan10 master br0
+# Hacemos esto mismo para las otras 2 interfaces y con la local/loopback:
+interface eth2
+ip address 10.1.1.2/30
+ip ospf area 0
+interface eth3
+ip address 10.1.1.3/30
+ip ospf area 0
+interface lo
+ip address 10.1.1.4/32
+ip ospf area 0
+
+# Configuramos el protocolo de enrutamiento BGP con el AS numero 1 (nos metera en otra subterminal): 
+router bgp 1
+
+# Creamos un "peer-group" llamado 'ibgp' que vamos a usar para configurar el comportamiento de las sesiones BGP con los demas routers:
+neighbor ibgp peer-group
+
+# La interfaz de loopback es la que usaremos de actualizacion para establecer la sesion BGP:
+neighbor ibgp update-source lo
+
+# La configuracion de BGP usuará un rango de IP para el peer-group que creamos antes:
+# (OJO CON LAS IPS, MUCHOS RANGOS Y MASCARAS DISTINTAS, REVISAR!)
+bgp listen range 40.1.1.0/24 peer-group ibgp
+
+# Activamos la "address-family" (???) para la L2VPN EVPN (???)
+address-family l2vpn evpn
+
+# Activamos los neighbor y configuramos como si fuera un "route-reflector client":
+neighbor ibgp activate
+neighbor ibgp route-reflector-client
+exit-address-family
+
+# Activamos el protocolo de enrutamiento OSPF:
+router ospf
