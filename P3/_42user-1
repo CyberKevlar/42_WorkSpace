@@ -26,18 +26,18 @@ exit
 
 # Esta ultima la usaremos para 'BGP update-source' y 'router-id'.
 interface lo
- ip address 10.255.255.1/32
+ ip address 1.1.1.1/32
  ip ospf area 0
 exit
 
 # (???)
 router ospf
- router-id 10.255.255.1
+ router-id 1.1.1.1
 exit
 
 # Configuramos el protocolo de enrutamiento BGP con el AS numero 1 (nos metera en otra subterminal): 
 router bgp 1
- bgp router-id 10.255.255.1
+ bgp router-id 1.1.1.1
 
  # Creamos los grupos ibgp "peer-group", que vamos a usar para configurar el comportamiento
  # de las sesiones BGP con los demas routers:
@@ -54,7 +54,7 @@ router bgp 1
  # (OJO CON LAS IPS, MUCHOS RANGOS Y MASCARAS DISTINTAS, REVISAR!)
  # NOTA: con la mascara de red /24 permitimos que cualquier router con una direccion de loopback con
  # ese rango se empareje en auto.
- bgp listen range 10.255.255.0/24 peer-group ibgp
+ bgp listen range 1.1.1.0/24 peer-group ibgp
 
  # Activamos la "address-family" (???) para la L2VPN EVPN (???)
  address-family l2vpn evpn
