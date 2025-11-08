@@ -9,7 +9,7 @@ vtysh
 
 # (A partir de aquí TODO serán comandos de FRRouting, no de Linux en sí)
 # Abrimos el modo de configuración de FRRouting:
-conf t
+configure terminal
 
 # Configuración de OSPF (en el router-1) para el enrutamiento interno.
 # Usaremos las interfaces eth1, eth2, eth3 y la loopback (lo) para OSPF.
