@@ -62,21 +62,5 @@ address-family l2vpn evpn
 neighbor ibgp activate
 neighbor ibgp route-reflector-client
 
-# (Opcional) Si también se desea reflejar rutas IPv4 unicast:
-# address-family ipv4 unicast
-#  neighbor ibgp activate
-# exit-address-family
-
-# Salimos de la address-family EVPN y del proceso BGP:
-exit-address-family
+# Salimos aplicando el comando tantas veces como sea necesario:
 exit
-
-# Guardamos (si procede en tu entorno) y salimos del modo configuración:
-# write memory
-# exit
-
-# Verificación rápida (en vtysh):
-# show ip ospf neighbor
-# show bgp summary
-# show bgp l2vpn evpn summary
-# show bgp l2vpn evpn route-reflector
