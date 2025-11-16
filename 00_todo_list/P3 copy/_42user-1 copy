@@ -1,0 +1,66 @@
+# Configuración del router-1 como nodo principal (route-reflector EVPN)
+# usando FRRouting. La red usará:
+# - OSPF (Open Shortest Path First) como IGP (Interior Gateway Protocol) para el enrutamiento interno.
+# - iBGP (con id AS 1) para EVPN.
+# - EVPN (Ethernet VPN) como servicio de capa 2 sobre BGP.
+
+# Consola de FRRouting para la configuración:
+vtysh
+
+# (A partir de aquí TODO serán comandos de FRRouting, no de Linux en sí)
+# Abrimos el modo de configuración de FRRouting:
+configure terminal
+
+# Configuración de OSPF (en el router-1) para el enrutamiento interno.
+# Usaremos las interfaces eth1, eth2, eth3 y la loopback (lo) para OSPF.
+# Referencia de enlaces:
+# - router-1 eth1 → router-2 eth1 (10.1.1.2/30)
+# - router-1 eth2 → router-3 eth2 (10.1.1.6/30)
+# - router-1 eth3 → router-4 eth3 (10.1.1.10/30)
+# - router-1 loopback (1.1.1.1/32)
+interface eth1
+ip address 10.1.1.1/30
+ip ospf area 0
+
+interface eth2
+ip address 10.1.1.5/30
+ip ospf area 0
+
+interface eth3
+ip address 10.1.1.9/30
+ip ospf area 0
+
+# La loopback se usará como router-id para OSPF y BGP (identificador único del router-1):
+interface lo
+ip address 1.1.1.1/32
+ip ospf area 0
+
+# Configuramos OSPF e indicamos el router-id (1.1.1.1):
+router ospf
+router-id 1.1.1.1
+
+# Configuramos BGP con el AS número 1 (Autonomous System del dominio):
+router bgp 1
+bgp router-id 1.1.1.1
+
+# Creamos un peer-group para los vecinos iBGP:
+neighbor ibgp peer-group
+
+# El AS remoto para los vecinos iBGP es el mismo (1), ya que están dentro del AS:
+neighbor ibgp remote-as 1
+
+# Usamos la loopback como fuente de las sesiones/actualizaciones BGP:
+neighbor ibgp update-source lo
+
+# Auto-descubrimos vecinos iBGP cuyas loopbacks estén en este rango y los metemos en el peer-group:
+bgp listen range 1.1.1.0/24 peer-group ibgp
+
+# Activamos la familia EVPN sobre iBGP (RR EVPN):
+address-family l2vpn evpn
+
+# Activamos el peer-group y marcamos a los vecinos como clientes del route-reflector:
+neighbor ibgp activate
+neighbor ibgp route-reflector-client
+
+# Salimos aplicando el comando tantas veces como sea necesario:
+exit

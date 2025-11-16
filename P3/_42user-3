@@ -3,6 +3,7 @@
 
 ip link add br0 type bridge
 ip link set dev br0 up
+ip link set dev eth0 up
 ip link set dev eth2 up
 ip addr flush dev eth2
 
@@ -11,27 +12,12 @@ ip link add vxlan10 type vxlan id 10 local 10.1.1.6 dev eth2 dstport 4789
 ip link set dev vxlan10 up
 
 brctl addif br0 vxlan10
-brctl addif br0 eth2
+brctl addif br0 eth0
 
-# Assign underlay IP to the bridge
-ip addr add 10.1.1.6/30 dev br0
+# Assign underlay IP to the uplink (routed underlay)
+ip addr add 10.1.1.6/30 dev eth2
 # Loopback for router-id and BGP source
 ip addr add 1.1.1.3/32 dev lo
 
-# FRR configuration using br0
-vtysh -c 'configure terminal' \
-      -c 'interface br0' \
-      -c 'ip address 10.1.1.6/30' \
-      -c 'ip ospf area 0' \
-      -c 'interface lo' \
-      -c 'ip address 1.1.1.3/32' \
-      -c 'ip ospf area 0' \
-      -c 'router ospf' \
-      -c 'router-id 1.1.1.3' \
-      -c 'router bgp 1' \
-      -c 'bgp router-id 1.1.1.3' \
-      -c 'neighbor 1.1.1.1 remote-as 1' \
-      -c 'neighbor 1.1.1.1 update-source lo' \
-      -c 'address-family l2vpn evpn' \
-      -c 'neighbor 1.1.1.1 activate' \
-      -c 'advertise-all-vni'
+# FRR configuration (load via vtysh -f)
+vtysh -f /home/jmartos-/Documents/42_WorkSpace/P3/_42user-3.frr

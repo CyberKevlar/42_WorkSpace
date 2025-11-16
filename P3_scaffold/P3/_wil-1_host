@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eux
+
+# Host: levantar interfaz y asignar IP L2VN 30.1.1.1/24
+ip addr add 30.1.1.1/24 dev eth0 || true
+ip link set dev eth0 up

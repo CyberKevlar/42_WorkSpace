@@ -1,0 +1,24 @@
+configure terminal
+!
+interface eth1
+ ip ospf area 0
+ ip ospf network point-to-point
+!
+interface lo
+ ip ospf area 0
+!
+router ospf
+ router-id 1.1.1.2
+ passive-interface lo
+!
+router bgp 1
+ bgp router-id 1.1.1.2
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 update-source lo
+ address-family l2vpn evpn
+  neighbor 1.1.1.1 activate
+  advertise-all-vni
+ exit
+!
+end
+write memory

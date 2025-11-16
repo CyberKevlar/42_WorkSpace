@@ -1,0 +1,45 @@
+#!/bin/sh
+# Leaf router (router-2) - Linux + FRR setup
+# Proper bridge + VTEP setup so hosts attached to this router get L2 over EVPN
+
+# Create bridge and bring it up
+ip link add br0 type bridge
+ip link set dev br0 up
+
+# Ensure physical uplink is up and remove any IP on the physical
+ip link set dev eth1 up
+ip addr flush dev eth1
+
+# Create vxlan VTEP tied to the underlay address we will place on br0
+# Use the underlay IP 10.1.1.2 as the local VTEP source
+ip link add vxlan10 type vxlan id 10 local 10.1.1.2 dev eth1 dstport 4789
+ip link set dev vxlan10 up
+
+# Add vxlan and the access port into the bridge
+brctl addif br0 vxlan10
+brctl addif br0 eth1
+
+# Put the underlay IP on the bridge (not on the physical interface)
+# This makes routing/OSPF operate on the bridge
+ip addr add 10.1.1.2/30 dev br0
+
+# Ensure loopback address exists for router-id and BGP source
+ip addr add 1.1.1.2/32 dev lo
+
+# FRRouting configuration (vtysh)
+vtysh -c 'configure terminal' \
+      -c 'interface br0' \
+      -c 'ip address 10.1.1.2/30' \
+      -c 'ip ospf area 0' \
+      -c 'interface lo' \
+      -c 'ip address 1.1.1.2/32' \
+      -c 'ip ospf area 0' \
+      -c 'router ospf' \
+      -c 'router-id 1.1.1.2' \
+      -c 'router bgp 1' \
+      -c 'bgp router-id 1.1.1.2' \
+      -c 'neighbor 1.1.1.1 remote-as 1' \
+      -c 'neighbor 1.1.1.1 update-source lo' \
+      -c 'address-family l2vpn evpn' \
+      -c 'neighbor 1.1.1.1 activate' \
+      -c 'advertise-all-vni'

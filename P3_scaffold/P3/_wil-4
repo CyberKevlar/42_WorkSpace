@@ -1,0 +1,51 @@
+#!/bin/sh
+set -eux
+
+# === Underlay del RR
+  ip addr add 10.1.1.254/24 dev eth1 || true
+  ip link set dev eth1 up
+
+  mkdir -p /etc/frr
+
+  cat > /etc/frr/zebra.conf <<'EOF'
+  hostname _wil-4_zebra
+  service integrated-vtysh-config
+  log syslog
+  EOF
+
+  cat > /etc/frr/ospfd.conf <<'EOF'
+  hostname _wil-4_ospfd
+  router ospf
+    ospf router-id 10.1.1.254
+    network 10.1.1.0/24 area 0
+  log syslog
+  EOF
+
+  cat > /etc/frr/bgpd.conf <<'EOF'
+  frr defaults traditional
+  hostname _wil-4_bgpd
+  router bgp 65000
+    bgp router-id 10.1.1.254
+    neighbor VTEP peer-group
+    neighbor VTEP remote-as 65000
+    neighbor 10.1.1.11 peer-group VTEP
+    neighbor 10.1.1.12 peer-group VTEP
+    neighbor 10.1.1.13 peer-group VTEP
+
+    address-family l2vpn evpn
+neighbor 10.1.1.11 activate
+neighbor 10.1.1.11 route-reflector-client
+neighbor 10.1.1.12 activate
+neighbor 10.1.1.12 route-reflector-client
+neighbor 10.1.1.13 activate
+neighbor 10.1.1.13 route-reflector-client
+    exit-address-family
+  log syslog
+  EOF
+
+  (pkill bgpd || true); (pkill ospfd || true); (pkill zebra || true)
+  (zebra -d || true)
+  (ospfd -d || true)
+  (bgpd -d || true)
+
+  echo "RR listo. Comprueba: vtysh -c 'show bgp l2vpn evpn summary'"
