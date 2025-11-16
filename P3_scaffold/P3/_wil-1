@@ -23,6 +23,8 @@ ip link set dev vxlan10 master br0
 # === FRR: crear configs EVPN/OSPF y (re)iniciar daemons
 mkdir -p /etc/frr
 
+touch /etc/frr/vtysh.conf
+
 cat > /etc/frr/zebra.conf <<'EOF'
 hostname _wil-1_zebra
 service integrated-vtysh-config

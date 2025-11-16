@@ -7,6 +7,8 @@ set -eux
 
   mkdir -p /etc/frr
 
+  touch /etc/frr/vtysh.conf
+
   cat > /etc/frr/zebra.conf <<'EOF'
   hostname _wil-4_zebra
   service integrated-vtysh-config
