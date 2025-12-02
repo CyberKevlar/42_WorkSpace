@@ -19,5 +19,30 @@ ip addr add 10.1.1.6/30 dev eth2
 # Loopback for router-id and BGP source
 ip addr add 1.1.1.3/32 dev lo
 
-# FRR configuration (load via vtysh -f)
-vtysh -f /home/jmartos-/Documents/42_WorkSpace/P3/_42user-3.frr
+# FRR configuration
+vtysh <<EOF
+configure terminal
+!
+interface eth2
+ ip ospf area 0
+ ip ospf network point-to-point
+!
+interface lo
+ ip ospf area 0
+!
+router ospf
+ router-id 1.1.1.3
+ passive-interface lo
+!
+router bgp 1
+ bgp router-id 1.1.1.3
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 update-source lo
+ address-family l2vpn evpn
+  neighbor 1.1.1.1 activate
+  advertise-all-vni
+ exit
+!
+end
+write memory
+EOF
