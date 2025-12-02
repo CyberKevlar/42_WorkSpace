@@ -1,3 +1,7 @@
+#
+# ip link set dev eth1 up && ip addr add 10.1.1.1/30 dev eth1 && ip link set dev eth2 up && ip addr add 10.1.1.5/30 dev eth2 && ip link set dev eth3 up && ip addr add 10.1.1.9/30 dev eth3 && ip addr add 1.1.1.1/32 dev lo
+#
+
 #!/bin/sh
 # Spine router (router-1)
 
