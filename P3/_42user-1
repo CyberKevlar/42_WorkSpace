@@ -1,38 +1,18 @@
-configure terminal
+#!/bin/sh
+# Spine router (router-1)
 
-interface eth1
- ip address 10.1.1.1/30
- ip ospf area 0
- ip ospf network point-to-point
-!
-interface eth2
- ip address 10.1.1.5/30
- ip ospf area 0
- ip ospf network point-to-point
-!
-interface eth3
- ip address 10.1.1.9/30
- ip ospf area 0
- ip ospf network point-to-point
-!
-interface lo
- ip address 1.1.1.1/32
- ip ospf area 0
-!
-router ospf
- router-id 1.1.1.1
- passive-interface lo
-!
-router bgp 1
- bgp router-id 1.1.1.1
- neighbor ibgp peer-group
- neighbor ibgp remote-as 1
- neighbor ibgp update-source lo
- bgp listen range 1.1.1.0/24 peer-group ibgp
- address-family l2vpn evpn
-  neighbor ibgp activate
-  neighbor ibgp route-reflector-client
- exit
-!
-end
-write memory
+# Configurar IPs en Linux (Underlay)
+ip link set dev eth1 up
+ip addr add 10.1.1.1/30 dev eth1
+
+ip link set dev eth2 up
+ip addr add 10.1.1.5/30 dev eth2
+
+ip link set dev eth3 up
+ip addr add 10.1.1.9/30 dev eth3
+
+# Loopback
+ip addr add 1.1.1.1/32 dev lo
+
+# Cargar configuración FRR
+vtysh -f /home/jmartos-/Documents/42_WorkSpace/P3/_42user-1.frr
