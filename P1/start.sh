@@ -1,6 +1,5 @@
-#!/bin/bash
-# Arranca FRR en segundo plano
+# Starting FRR in background.
 /usr/lib/frr/frrinit.sh start
 /usr/lib/frr/watchfrr -d zebra bgpd ospfd isisd
-# Deja bash interactivo
+# Leaving interactive bash to allow command terminal access.
 exec bash
