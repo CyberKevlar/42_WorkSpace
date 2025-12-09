@@ -2,9 +2,9 @@
 # ip link add br0 type bridge && ip link set dev br0 up && ip link set dev eth0 up && ip link set dev eth1 up && ip addr flush dev eth1 && ip link add vxlan10 type vxlan id 10 local 1.1.1.2 dstport 4789 && ip link set dev vxlan10 up && brctl addif br0 vxlan10 && brctl addif br0 eth0 && ip addr add 10.1.1.2/30 dev eth1 && ip addr add 1.1.1.2/32 dev lo
 #
 
-# Leaf router (router-2) - Linux + FRR setup
-# Proper bridge + VTEP setup so hosts attached to this router get L2 over EVPN
-# Create bridge and bring it up
+# Leaf router, or secund router (router-2)
+
+# Create bridge and wake up
 ip link add br0 type bridge
 ip link set dev br0 up
 
@@ -13,16 +13,16 @@ ip link set dev eth0 up
 ip link set dev eth1 up
 ip addr flush dev eth1
 
-# Create vxlan VTEP tied to the underlay address we will place on br0
-# Use the Loopback IP 1.1.1.2 as the local VTEP source for EVPN
+# Create VXLAN VTEP and link to the underlay address we will place in br0
+# Use the loopback IP as the local VTEP ID source for EVPN
 ip link add vxlan10 type vxlan id 10 local 1.1.1.2 dstport 4789
 ip link set dev vxlan10 up
 
-# Add vxlan and the access port into the bridge (do NOT add uplink)
+# Add VXLAN and the access port into the bridge br0 
 brctl addif br0 vxlan10
 brctl addif br0 eth0
 
-# Put the underlay IP on the uplink interface (routed underlay)
+# Put the underlay IP on the uplink interface
 ip addr add 10.1.1.2/30 dev eth1
 
 # Ensure loopback address exists for router-id and BGP source

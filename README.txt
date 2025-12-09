@@ -1,73 +1,93 @@
 << DOCUMENTACION RESUMIDA DEL PROYECTO 42_BADASS >>
 
-Parte 1: creacion de imagenes Docker
+***************************************
+*** P1: creacion de imagenes Docker ***
+***************************************
 
 El objetivo es crear las imagenes base que se utilizaran en el programa GNS3 para simular los distintos dispositivos de red.
 
 + Imagen host (Dockerfile_host):
 
     - Usamos 'Alpine' como base por ser un sistema ligero y estable, perfecto para emular el equipo de un usuario final.
-    - Instalamos los paquetes que creemos comenientes para usarlos durante las pruebas:
+    - Instalamos los paquetes que creemos convenientes para usarlos durante las pruebas:
     
         * bash (shell).
         * iputils (ping).
-        * tcpdump (análisis de tráfico).
+        * vim (editor de texto basico en consola para editar archivos de configuracion si fuera necesario).
         * iproute2 (para gestión de IP's).
-        * vim.
+        * tcpdump (analisis de tráfico).
 
 + Imagen router (Dockerfile_router):
     
-    - Usamos una imagen oficial de 'FRRouting', o FRR. Se trata de un sistema operativo que emula
-    sobre una base de linux un router con todas sus caracterirsticas.
+    - Usamos una imagen oficial de 'FRRouting', o FRR. Se trata de un sistema operativo que emula sobre una base de linux un router con todas sus caracterirsticas.
+    - Instalamos los paquetes necesarios para el correcto funcionamiento de FRR:
+    
+        * iputils.
+        * vim.
+        * bash.
+        * bridge (para crear 'bridges').
+
     - Instalamos y habilitamos los demons de enrutamiento necesarios en la ruta '/etc/frr/daemons':
     
-        * `zebra` (núcleo)
-        * `bgpd` (BGP)
-        * `ospfd` (OSPF)
-        * `isisd`.
+        * `zebra` (gestiona las tablas de enrutamiento).
+        * `bgpd` (BGP o Border Gateway Protocol: protocolo para intercambiar rutas entre equipos).
+        * `ospfd` (OSPF: protocolo de enrutamiento Underlay, el cual 'calcula' la ruta mas corta).
+        * `isisd` (ISIS: protocolo de enrutamiento Overlay, que usaremos para implementar spine-leaf y BGP EVPN).
     
-    - Se ha configurado un script de entrada (`start.sh`) que inicia los servicios de FRR y mantiene el contenedor en ejecución.
+    - Se ha configurado un script de entrada como entripoint (`start.sh`) que inicia los servicios de FRR y mantiene el contenedor en ejecución y que no secuestre la terminal.
 
-## Parte 2: VXLAN y Bridging (P2)
+*****************
+*** P2: VXLAN ***
+*****************
 
-En esta fase se implementa una red superpuesta (Overlay) utilizando VXLAN para conectar hosts en diferentes segmentos de red a través de un túnel L2 sobre L3.
+Aqui implementaremos una red utilizando una VXLAN para conectar los hosts de distintas redes a traves de un túnel.
 
-**Topología**: Host1 <-> Router1 <-> Switch <-> Router2 <-> Host2
+La idea es implementar dos routers conectados mediante un switch, y cada router conectado a un host diferente.
 
 Se han configurado dos modos de funcionamiento:
 
-1.  **Modo Multicast (Dinámico - `_g`)**:
-    *   Se configuran las interfaces VXLAN asociándolas a un grupo Multicast (ej. `239.1.1.1`).
-    *   Esto permite que los VTEPs (Virtual Tunnel End Points) descubran automáticamente a otros miembros del grupo sin configuración explícita de IPs remotas.
+- Modo Multicast/Dinamico/Automatico (_g):
 
-2.  **Modo Estático (`_s`)**:
-    *   Se configuran las interfaces VXLAN definiendo explícitamente la IP remota (`remote <IP>`) del otro router.
-    *   No requiere mensajería multicast en la red física, pero es menos escalable.
+    Se configuran las interfaces VXLAN asociandolas a un "grupo" multicast.
+    Asi los VTEP's (Virtual Tunnel End Points) descubriran automáticamente a otros miembros del grupo sin configurar manualmente las IP's.
 
-**Configuración común**:
-*   Creación de un **Bridge** (`br0`) en los routers para unir la interfaz física conectada al host y la interfaz VXLAN, permitiendo que el tráfico del host viaje encapsulado por el túnel.
+- Modo Estatico/Manual/Fijo (_s):
 
-## Parte 3: BGP EVPN con Arquitectura Spine-Leaf (P3)
+    Se configuran manualmente las interfaces VXLAN en cada host, definiendo explícitamente la IP remota del otro router.
 
-Esta es la fase final y más compleja, donde se utiliza BGP EVPN para gestionar el plano de control de la red VXLAN, eliminando la necesidad de multicast o configuración estática manual punto a punto.
+Para ambas configuraciones se crea un Bridge en cada router, al cual se asocian las interfaces físicas (conectadas al switch) y las interfaces VXLAN (conectadas a los hosts).
 
-**Topología**: Arquitectura Spine-Leaf
-*   **1 Spine** (Router 1): Actúa como el núcleo de la red.
-*   **3 Leaves** (Router 2, 3, 4): Actúan como bordes donde se conectan los hosts.
+**************************************************
+*** P3: BGP y EVPN con arquitectura Spine-Leaf ***
+**************************************************
 
-**Pasos de la configuración**:
+Como desarollo final utilizaremos BGP y EVPN para gestionar el plano de control de la red VXLAN, eliminando la necesidad de multicast o configuración estática manual punto a punto.
+Es decir, con BGP y EVPN podremos "descubrir o exponer" automaticamente los VTEP y las direcciones de los hosts detras de cada router y asi agilizar la comunicacion entre ellos 
 
-1.  **Configuración del Underlay (OSPF)**:
-    *   Se configuran direcciones IP en las interfaces físicas que conectan el Spine con los Leaves.
-    *   Se configuran interfaces **Loopback** (`lo`) en cada router para tener una IP estable (Router-ID).
-    *   Se utiliza **OSPF** (Area 0) para anunciar las rutas de las Loopbacks y asegurar que todos los routers tengan conectividad IP básica entre sí.
+Como funciona Spine-Leaf en el proyecto:
 
-2.  **Configuración del Overlay (BGP EVPN)**:
-    *   Todos los routers forman parte del mismo Sistema Autónomo (AS 1), utilizando **iBGP**.
-    *   **Spine**: Se configura como **Route Reflector**. Esto evita tener que hacer una malla completa (Full Mesh) de conexiones BGP entre todos los Leaves.
-    *   **Leaves**: Se configuran como clientes del Route Reflector.
-    *   Se activa la familia de direcciones `l2vpn evpn` para intercambiar información sobre las direcciones MAC y los VNI (VXLAN Network Identifiers).
+    - 1 Spine (de ahora en adelante 'router principal'): será el router maestro/padre/principal, que actuara como nucleo de la red.
+    - 3 Leaves (de ahora en adelante 'routers secundarios'): los otros routers, que se conectan al router Spine y estos a su vez a los host.
 
-3.  **Configuración de VXLAN**:
-    *   En los Leaves, se crean interfaces VXLAN utilizando la IP de la Loopback como origen del túnel.
-    *   Gracias a BGP EVPN, los routers aprenden automáticamente qué VTEP tiene qué host (MAC address) detrás, permitiendo la comunicación L2 entre hosts a través de la red L3 enrutada.
+Configuracion:
+
+    1. Configuracion del Underlay (OSPF):
+
+        - Configuramos direcciones IP para interfaces de red que conectan el router principal con los routers secundarios.
+        - Configuramos interfaces loopback (lo) en cada router para tener una IP a modo de ID (Router-ID), que usaremos para identificar cada router en los protocolos de enrutamiento.
+        - Utilizamos OSPF para anunciar las rutas loopbacks de los routers y asegurar que todos tengan conectividad IP entre si.
+
+    2. Configuracion del Overlay (BGP y EVPN)**:
+
+        - Todos los routers forman parte del mismo "sistema"(as 1) utilizando iBGP, que permite intercambiar rutas dentro de un mismo sistema.
+        - Router principal: lo configuramos como "router reflector", que es para que los routers secundarios no tengan que conectarse entre si directamente, sino que todo el trafico pasa por el router principal.
+        - Routers secundarios: se configuran como "clientes" del router reflector.
+        - Se activa la familia de direcciones 'l2vpn evpn' para intercambiar información sobre las direcciones y los VNI (VXLAN Network Identifiers).
+
+    3. Configuracion de VXLAN:
+
+        - En los routers secundarios se crean interfaces VXLAN utilizando la IP de loopback como origen del tunel y la IP de loopback del router principal como destino.
+        - Se crea un bridge en cada router secundario, al cual se asocian las interfaces de red y las interfaces VXLAN (conectadas a los hosts).
+        - Haciendo uso de BGP y EVPN los routers "aprenden" automaticamente qué VTEP (Virtual Tunnel End Point) tiene cada host por detras de su red,permitiendo la comunicación entre ellos (simulando una red local).
+
+<< FIN >>

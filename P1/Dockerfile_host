@@ -2,7 +2,4 @@
 FROM alpine:latest
 
 # Installing some packages, "iproute2", "iputils" and "bash", like in BusyBox container.
-RUN apk add --no-cache iproute2 iputils bash
-
-# Installing "tcpdump" and "vim" for network monitoring and text editing.
-RUN apk add tcpdump vim iputils
+RUN apk add --no-cache bash iputils vim iproute2 tcpdump

@@ -1,14 +1,13 @@
 # Using FRRouting latest image as base.
 FROM frrouting/frr:latest
 
-#busybox
 # Installing some packages, "iputils", "bridge" and "bash".
-RUN apk add --no-cache iputils bridge bash
+RUN apk add --no-cache iputils vim bash bridge
 
 # Configuring daemons.
 ENV DAEMONS="zebra bgpd ospfd isisd"
 
-# This command create empty config files for all daemons
+# This command create 'empty config files' for all daemons
 RUN touch /etc/frr/bgpd.conf /etc/frr/ospfd.conf /etc/frr/isisd.conf \
     && chown frr:frr /etc/frr/*.conf \
     && chmod 640 /etc/frr/*.conf
