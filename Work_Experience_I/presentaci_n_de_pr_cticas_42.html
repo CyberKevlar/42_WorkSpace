@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa de Prácticas 42 - Juan Carlos Martos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        techLightBg: '#f8fafc',    
+                        techLightCard: '#ffffff',  
+                        techLightBorder: '#e2e8f0',
+                        tech42: '#00babc',         
+                        techSantander: '#ec1c24',  
+                        techAlenia: '#2d52ec',     
+                        techTextDark: '#0f172a',   
+                        techTextMuted: '#64748b'   
+                    },
+                    fontFamily: {
+                        outfit: ['Outfit', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function handleLogoError(brand) {
+            const imgEl = document.getElementById(`img-logo-${brand}`);
+            const fallbackEl = document.getElementById(`fallback-logo-${brand}`);
+            if (imgEl && fallbackEl) {
+                imgEl.style.display = 'none';
+                fallbackEl.classList.remove('hidden');
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 186, 188, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 28, 36, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(45, 82, 236, 0.03) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        .tech-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+        }
+        .slide-active {
+            display: flex !important;
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.995); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #00babc;
+        }
+        .tricolor-border {
+            position: relative;
+        }
+        .tricolor-border::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #00babc 0%, #2d52ec 50%, #ec1c24 100%);
+            border-radius: 16px 16px 0 0;
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-inter min-h-screen flex flex-col justify-between overflow-hidden select-none tech-grid">
+
+    <!-- HEADER DE COMPAÑÍAS -->
+    <header class="px-8 py-3 bg-white/95 backdrop-blur-md border-b border-slate-200/80 flex justify-between items-center z-20 shadow-sm">
+        <div class="flex items-center gap-4 md:gap-6 overflow-hidden">
+            <div class="flex items-center gap-4">
+                <!-- Contenedor Logo 42 -->
+                <div class="h-10 flex items-center bg-white px-2 py-1 rounded-lg border border-slate-200/60 shadow-sm">
+                    <img id="img-logo-42" src="42_2.jpg" alt="42" class="h-full max-h-8 object-contain" onerror="handleLogoError('42')">
+                    
+                    <div id="fallback-logo-42" class="hidden flex items-center gap-2">
+                        <span class="font-mono text-lg font-extrabold bg-slate-900 text-white px-2 py-0.5 rounded tracking-tighter">42</span>
+                        <div class="flex flex-col leading-none text-left border-l border-slate-300 pl-2">
+                            <span class="text-[9px] font-extrabold tracking-widest text-slate-800 font-outfit">MÁLAGA</span>
+                            <span class="text-[7px] font-medium text-slate-500 font-inter">Fundación Telefónica</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+                
+                <!-- Contenedor Texto Estilizado Alenia -->
+                <div class="h-10 flex items-center bg-white px-3 py-1 rounded-lg border border-slate-200/60 shadow-sm">
+                    <span class="text-xl font-extrabold tracking-tight text-[#2d52ec] font-outfit lowercase leading-none">alenia</span>
+                </div>
+                
+                <div class="h-6 w-[1px] bg-slate-200"></div>
+
+                <!-- Contenedor Texto Estilizado Santander CIB -->
+                <div class="h-10 flex items-center bg-white px-3.5 py-1 rounded-lg border border-slate-200/60 shadow-sm">
+                    <div class="flex flex-col leading-none text-left">
+                        <span class="text-base font-black text-[#ec1c24] tracking-tight font-outfit">Santander</span>
+                        <span class="text-[6.5px] font-extrabold text-slate-500 tracking-wider font-mono uppercase">Corporate & Investment Banking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="hidden lg:flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-[11px] font-mono font-medium">
+                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-slate-600">Soporte Regulado L1</span>
+            </div>
+            <div class="text-xs text-slate-700 font-bold bg-slate-100 border border-slate-200/80 px-3 py-1.5 rounded-lg shadow-sm" id="slide-counter">
+                Cargando...
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE DIAPOSITIVAS (CONTENEDOR 16:9) -->
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6 relative z-10">
+        <div class="w-full max-w-6xl aspect-[16/9] bg-techLightCard rounded-2xl border border-slate-200/85 shadow-xl shadow-slate-200/40 relative overflow-hidden flex flex-col justify-between p-8 md:p-10 tricolor-border">
+            
+            <div class="absolute -top-10 -right-10 w-44 h-44 bg-tech42/5 rounded-full filter blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-44 h-44 bg-techSantander/3 rounded-full filter blur-3xl pointer-events-none"></div>
+            <div class="absolute top-1/2 left-1/3 w-32 h-32 bg-techAlenia/3 rounded-full filter blur-3xl pointer-events-none"></div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 1: PRESENTACIÓN (PORTADA)
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-1">
+                <div class="flex justify-between items-start">
+                    <span class="px-3 py-1 bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold rounded-full uppercase tracking-widest font-mono">
+                        // work_experience.sh
+                    </span>
+                    <span class="text-xs text-techTextMuted font-mono">Evaluación de 42_Work_Experience_I</span>
+                </div>
+                
+                <div class="my-auto space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-100 rounded-md text-xs text-blue-600 font-semibold">
+                        <i class="fa-solid fa-code-commit"></i> Transición de estudiante de 42 a Analista de Datos
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-outfit font-extrabold text-techTextDark leading-tight tracking-tight">
+                        Soporte Operativo <br>
+                        <span class="bg-gradient-to-r from-teal-500 via-blue-600 to-red-500 bg-clip-text text-transparent">
+                            Control de Servicios Regulatorios
+                        </span>
+                    </h1>
+                    <p class="text-sm md:text-base text-slate-600 max-w-3xl leading-relaxed">
+                        Seguimiento de mallas críticas, procesamiento y análisis de datos en la división de banca corporativa internacional de Santander Digital Services (SDS) a través de Alenia.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-slate-100 pt-5">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
+                        <p class="text-[10px] text-teal-600 font-mono uppercase tracking-wider font-semibold">// Ponente</p>
+                        <p class="text-xs md:text-sm font-bold text-slate-800">Juan Carlos Martos</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
+                        <p class="text-[10px] text-teal-600 font-mono uppercase tracking-wider font-semibold">// Escuela</p>
+                        <p class="text-xs md:text-sm font-bold text-slate-800">42 Málaga (F. Telefónica)</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
+                        <p class="text-[10px] text-blue-600 font-mono uppercase tracking-wider font-semibold">// Empresa</p>
+                        <p class="text-xs md:text-sm font-bold text-blue-600">Alenia</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/60">
+                        <p class="text-[10px] text-red-500 font-mono uppercase tracking-wider font-semibold">// Cliente Final</p>
+                        <p class="text-xs md:text-sm font-bold text-red-600">Santander CIB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 2: ¿QUÉ ES SANTANDER CIB?
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-2">
+                <div class="border-l-4 border-red-500 pl-4">
+                    <span class="text-xs text-red-500 uppercase font-mono tracking-wider font-bold">Negocio Global & Datos</span>
+                    <h2 class="text-2xl md:text-3xl font-outfit font-bold text-slate-800">¿Qué es Santander SCIB?</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-auto">
+                    <div class="p-5 bg-slate-50/80 border border-slate-200 rounded-xl flex flex-col justify-between h-44 relative overflow-hidden group hover:border-red-400 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <span class="text-red-500 text-xl"><i class="fa-solid fa-landmark"></i></span>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-1">Banca corporativa</h3>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Servicios premium e inversión a escala de grandes multinacionales y fondos mundiales.</p>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-slate-50/80 border border-slate-200 rounded-xl flex flex-col justify-between h-44 relative overflow-hidden group hover:border-teal-400 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <span class="text-teal-500 text-xl"><i class="fa-solid fa-globe"></i></span>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-1">Mercados financieros</h3>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Intercambio internacional de capitales, divisas y activos las 24 horas.</p>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-slate-50/80 border border-slate-200 rounded-xl flex flex-col justify-between h-44 relative overflow-hidden group hover:border-blue-400 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <span class="text-blue-500 text-xl"><i class="fa-solid fa-database"></i></span>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-1">Procesamiento</h3>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Tratamiento y almacenamiento masivo de datos transaccionales heterogéneos.</p>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-slate-50/80 border border-slate-200 rounded-xl flex flex-col justify-between h-44 relative overflow-hidden group hover:border-red-400 hover:bg-white hover:shadow-md transition-all duration-300">
+                        <span class="text-red-500 text-xl"><i class="fa-solid fa-shield-halved"></i></span>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-1">Servicios globales</h3>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Flujos de datos que deben operar sin fallos bajo estrictos acuerdos legales.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 border-t border-slate-100 pt-4 font-inter">
+                    <i class="fa-solid fa-shield-halved text-red-500"></i> La fiabilidad absoluta en la información financiera es un requisito legal.
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 3: MI EQUIPO Y RESPONSABILIDADES
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-3">
+                <div class="border-l-4 border-teal-500 pl-4">
+                    <span class="text-xs text-teal-500 uppercase font-mono tracking-wider font-bold">Identificación Técnica</span>
+                    <h2 class="text-2xl md:text-3xl font-outfit font-bold text-slate-800">Mi equipo en Santander</h2>
+                </div>
+
+                <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <p class="text-xs text-slate-500 uppercase tracking-widest font-mono font-bold">Nomenclatura Oficial del Equipo:</p>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl font-mono relative overflow-hidden shadow-inner">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-teal-400 to-red-500"></div>
+                            <span class="text-base md:text-lg font-bold text-teal-300 tracking-wide block">
+                                SGT_CR_SCIB_CS_REGULATORY_L1
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed font-normal">
+                            Soporte técnico de primer nivel en la rama de "Servicios Gestionados Tecnológicos (SGT)", orientados al Control de Riesgos (CR) y flujos regulatorios de Santander CIB.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 shadow-sm">
+                        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-blue-500"></i> Desglose de Funciones:
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 bg-teal-50 rounded font-mono text-[10px] text-teal-600 border border-teal-200">L1</span>
+                                <span class="text-xs text-slate-600 font-semibold">Monitorización y detección inicial de fallos.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 bg-blue-50 rounded font-mono text-[10px] text-blue-600 border border-blue-200">CR</span>
+                                <span class="text-xs text-slate-600 font-semibold">Control de riesgos técnicos en producción.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 bg-red-50 rounded font-mono text-[10px] text-red-500 border border-red-200">CS</span>
+                                <span class="text-xs text-slate-600 font-semibold">Centro de soporte.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 border-t border-slate-100 pt-4 font-inter">
+                    <i class="fa-solid fa-terminal text-teal-500"></i> Mallas operativas, logs, alertas tempranas y mitigación de desviaciones temporales.
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 4: TRABAJO DIARIO Y RESPONSABILIDADES
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-4">
+                <div class="border-l-4 border-teal-500 pl-4">
+                    <span class="text-xs text-teal-500 uppercase font-mono tracking-wider font-bold">Operación y Dinámica Diaria</span>
+                    <h2 class="text-2xl md:text-3xl font-outfit font-bold text-slate-800">Responsabilidades y Trabajo Diario</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-auto items-stretch">
+                    <!-- Columna Izquierda: Responsabilidades del Equipo -->
+                    <div class="bg-slate-50/50 border border-slate-200/80 rounded-xl p-5 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 font-mono">// Pilares del Equipo</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3 flex-grow">
+                            <div class="p-3 bg-white border border-slate-200/60 rounded-lg flex flex-col justify-between h-24 hover:border-teal-400 transition-colors">
+                                <span class="text-teal-500 text-xs flex items-center gap-1.5"><i class="fa-solid fa-chart-area"></i> Monitorizar</span>
+                                <p class="text-[10px] text-slate-500 leading-tight">Supervisión en tiempo real de mallas automatizadas de procesos críticos.</p>
+                            </div>
+                            <div class="p-3 bg-white border border-slate-200/60 rounded-lg flex flex-col justify-between h-24 hover:border-blue-400 transition-colors">
+                                <span class="text-blue-500 text-xs flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-up-lock"></i> Flujos</span>
+                                <p class="text-[10px] text-slate-500 leading-tight">Garantizar la entrega íntegra de reportes normativos.</p>
+                            </div>
+                            <div class="p-3 bg-white border border-slate-200/60 rounded-lg flex flex-col justify-between h-24 hover:border-red-400 transition-colors">
+                                <span class="text-red-500 text-xs flex items-center gap-1.5"><i class="fa-solid fa-bug"></i> Incidencias</span>
+                                <p class="text-[10px] text-slate-500 leading-tight">Clasificación, diagnóstico y seguimiento de alertas de producción.</p>
+                            </div>
+                            <div class="p-3 bg-white border border-slate-200/60 rounded-lg flex flex-col justify-between h-24 hover:border-teal-400 transition-colors">
+                                <span class="text-[#2d52ec] text-xs flex items-center gap-1.5"><i class="fa-solid fa-arrows-up-to-line"></i> Escalado</span>
+                                <p class="text-[10px] text-slate-500 leading-tight">Canalizar rápidamente errores complejos hacia L2 y L3.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Flujo de Mi Trabajo Diario -->
+                    <div class="bg-slate-50/50 border border-slate-200/80 rounded-xl p-5 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 font-mono">// Mi Día a Día</h3>
+                        
+                        <div class="space-y-3.5 flex-grow flex flex-col justify-center">
+                            <div class="flex items-start gap-3">
+                                <span class="h-5 w-5 rounded bg-teal-50 text-teal-600 border border-teal-200 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-sm">1</span>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">Supervisión en ventana crítica</h4>
+                                    <p class="text-[11px] text-slate-500">Control estricto de las franjas horarias clave en las que viaja la información financiera.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="h-5 w-5 rounded bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-sm">2</span>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">Detección y Análisis preventivo</h4>
+                                    <p class="text-[11px] text-slate-500">Análisis detallado de logs para evitar bloqueos e interrupciones en la producción.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="h-5 w-5 rounded bg-red-50 text-red-500 border border-red-200 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-sm">3</span>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">Validación y Runbooks</h4>
+                                    <p class="text-[11px] text-slate-500">Redacción y mejora de manuales de soporte técnico para resolver futuras incidencias velozmente.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 border-t border-slate-100 pt-4 font-inter">
+                    <i class="fa-solid fa-gears text-blue-500"></i> Integrando el soporte operativo de primer nivel con el análisis preventivo diario.
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 5: TECNOLOGÍAS UTILIZADAS (CON CAPTURAS REALES)
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-5">
+                <div class="border-l-4 border-teal-500 pl-4">
+                    <span class="text-xs text-teal-500 uppercase font-mono tracking-wider font-bold">Ecosistema Técnico</span>
+                    <h2 class="text-2xl md:text-3xl font-outfit font-bold text-slate-800">Tecnologías Utilizadas</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+                    <!-- Control-M -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl relative group hover:border-teal-400 hover:bg-white hover:shadow-md transition-all flex flex-col justify-between h-full overflow-hidden">
+                        <div class="absolute top-2 left-3 bg-teal-500 px-2 py-0.5 rounded text-[8px] font-bold text-white uppercase tracking-wider shadow-sm z-10">
+                            Planificación
+                        </div>
+                        <div class="w-full h-24 md:h-28 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 relative mb-2 mt-4 cursor-zoom-in group-hover:border-teal-300 transition-colors">
+                            <img src="control-m.png" alt="BMC Control-M (Entorno de mallas de producción)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <h3 class="text-xs md:text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock-rotate-left text-teal-500"></i> BMC Control-M
+                        </h3>
+                        <p class="text-[10px] md:text-xs text-slate-500 leading-tight">
+                            Gestión y monitoreo de mallas de procesos críticos (*batch jobs*) bancarios y flujos automáticos de datos.
+                        </p>
+                    </div>
+
+                    <!-- Linux -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl relative group hover:border-blue-400 hover:bg-white hover:shadow-md transition-all flex flex-col justify-between h-full overflow-hidden">
+                        <div class="absolute top-2 left-3 bg-blue-500 px-2 py-0.5 rounded text-[8px] font-bold text-white uppercase tracking-wider shadow-sm z-10">
+                            Sistemas
+                        </div>
+                        <div class="w-full h-24 md:h-28 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 relative mb-2 mt-4 cursor-zoom-in group-hover:border-blue-300 transition-colors">
+                            <img src="Bash.png" alt="Terminal Bash (Filtrado de logs y comandos del sistema)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <h3 class="text-xs md:text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                            <i class="fa-brands fa-linux text-blue-500"></i> Linux & Bash
+                        </h3>
+                        <p class="text-[10px] md:text-xs text-slate-500 leading-tight">
+                            Diagnóstico ágil en servidores, análisis profundo de logs de mallas críticas mediante terminal Bash.
+                        </p>
+                    </div>
+
+                    <!-- Apps Corporativas -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl relative group hover:border-red-400 hover:bg-white hover:shadow-md transition-all flex flex-col justify-between h-full overflow-hidden">
+                        <div class="absolute top-2 left-3 bg-red-500 px-2 py-0.5 rounded text-[8px] font-bold text-white uppercase tracking-wider shadow-sm z-10">
+                            Control
+                        </div>
+                        <div class="w-full h-24 md:h-28 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 relative mb-2 mt-4 cursor-zoom-in group-hover:border-red-300 transition-colors">
+                            <img src="sanander.png" alt="Plataforma Corporativa Santander (Regulación y monitorización)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <h3 class="text-xs md:text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-red-500"></i> Apps Corporativas
+                        </h3>
+                        <p class="text-[10px] md:text-xs text-slate-500 leading-tight">
+                            Herramientas bancarias de Santander para monitorizar flujos regulatorios de activos monetarios y transacciones.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 border-t border-slate-100 pt-4 font-inter">
+                    <i class="fa-solid fa-layer-group text-teal-500"></i> El entrenamiento recibido en el Common Core de 42 permite asimilar cualquier stack complejo de sistemas y control.
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIAPOSITIVA 6: CONCLUSIÓN Y CIERRE (CON INTEGRACIÓN DE APRENDIZAJES)
+                 ======================================================== -->
+            <div class="hidden flex-col justify-between h-full w-full" id="slide-6">
+                <div class="flex justify-between items-start">
+                    <span class="px-3 py-1 bg-red-50 border border-red-200 text-red-500 text-xs font-bold rounded-full uppercase tracking-widest font-mono">
+                        // exit_presentation
+                    </span>
+                    <span class="text-xs text-slate-500 font-mono">Fin de la Defensa</span>
+                </div>
+
+                <div class="my-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
+                    <div class="space-y-4">
+                        <h2 class="text-3xl md:text-4xl font-outfit font-extrabold text-slate-800 tracking-tight leading-tight">
+                            ¡Muchas gracias!
+                        </h2>
+                        <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">
+                            Esta primera experiencia profesional como consultor tecnológico en <strong class="text-blue-600 font-bold">Alenia Consulting</strong>, y el entorno corporativo internacional de <strong class="text-red-500 font-bold">Santander CIB</strong> me ha permitido evolucionar como analista de datos técnicos en producción crítica diaria.
+                        </p>
+                        <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">
+                            Tambien cabe mencionar como clave la metodología de <strong class="text-teal-600 font-bold">42 Málaga</strong>, demostrando que la templanza, la resiliencia y la asimilación ágil de stack complejos son aptitudes óptimas para trabajar en una gran empresa.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2 font-mono">
+                            <i class="fa-solid fa-address-book text-teal-500"></i> Contacto                       </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                <span class="text-teal-500 text-sm"><i class="fa-regular fa-envelope"></i></span>
+                                <span class="text-[10px] text-slate-700 font-mono break-all">juancarlosmartosvergara@gmail.com</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                <span class="text-blue-500 text-sm"><i class="fa-brands fa-linkedin-in"></i></span>
+                                <span class="text-[10px] text-slate-700 font-mono">linkedin.com/in/juan-carlos-martos-vergara</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
+                                <span class="text-red-500 text-sm"><i class="fa-brands fa-github"></i></span>
+                                <span class="text-[10px] text-slate-700 font-mono">github.com/CyberKevlar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-500 font-medium flex items-center gap-2 border-t border-slate-100 pt-4 font-inter">
+                    <i class="fa-solid fa-circle-question text-teal-500 animate-pulse"></i> Turno de preguntas y aclaraciones!
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- CONTROL PANEL & SPEECH SCRIPT -->
+    <div class="bg-slate-900 border-t border-slate-800 p-4 z-20 relative shadow-[0_-10px_30px_rgba(15,23,42,0.15)]">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-2">
+                <button id="toggle-notes" class="flex items-center gap-2 text-xs font-bold text-teal-400 hover:text-white transition uppercase tracking-wider">
+                    <i id="notes-icon" class="fa-solid fa-chevron-up"></i>
+                    <span>Guion para Defensa (Ensayar Ponencia)</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <button id="prev-slide" class="h-8 w-8 rounded-lg border border-slate-700 bg-slate-800 flex items-center justify-center text-white hover:border-teal-400 hover:text-teal-400 transition shadow-sm">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button id="next-slide" class="h-8 w-8 rounded-lg border border-slate-700 bg-slate-800 flex items-center justify-center text-white hover:border-teal-400 hover:text-teal-400 transition shadow-sm">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="notes-container" class="h-36 custom-scroll overflow-y-auto bg-slate-950 border border-slate-800 rounded-lg p-3.5 text-xs md:text-sm text-slate-300 leading-relaxed transition-all duration-300 font-inter shadow-inner">
+                <p id="speaker-script"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP PARA PREVIEW EN ALTA RESOLUCIÓN -->
+    <div id="image-modal" class="hidden fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-md transition-opacity duration-300">
+        <div class="relative max-w-4xl max-h-[85vh] w-full bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col">
+            <div class="flex justify-between items-center px-5 py-4 border-b border-slate-800 bg-slate-950/80">
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    <span id="modal-title" class="text-xs md:text-sm font-mono font-bold text-slate-200">Previsualización de Entorno Real</span>
+                </div>
+                <button id="close-modal" class="text-slate-400 hover:text-white text-2xl transition-colors p-1 leading-none">&times;</button>
+            </div>
+            <div class="flex-grow flex items-center justify-center overflow-hidden bg-black p-4">
+                <img id="modal-img" src="" alt="Zoom" class="max-w-full max-h-[60vh] object-contain rounded-lg">
+            </div>
+            <div class="px-5 py-3 border-t border-slate-800 bg-slate-950/50 text-center">
+                <p class="text-[11px] text-slate-400 font-mono">Pulsa fuera del recuadro o haz clic en la "X" para cerrar la previsualización.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA DE CONTROL DEL CARRUSEL Y NAVEGACIÓN -->
+    <script>
+        const scripts = {
+            1: "Buenas tardes. Mi nombre es Juan Carlos Martos y soy estudiante de 42 Málaga. Hoy presento mi defensa de prácticas tras mi incorporación como consultor técnico en Alenia, desempeñando funciones clave de análisis y soporte operativo en Santander Corporate & Investment Banking. Mi objetivo en esta ponencia es detallarles cómo damos soporte diario a la robustez tecnológica del banco y cómo la formación lógica de 42 me ha permitido resolver incidencias complejas de producción con resiliencia.",
+            2: "Para que un nuevo miembro de la junta directiva lo comprenda plenamente, Santander CIB gestiona la banca corporativa premium y de inversión para grandes multinacionales a nivel global. En este entorno financiero masivo de mercados las 24 horas, el procesamiento y análisis oportuno de datos es un requisito de supervivencia operativo y regulatorio estricto.",
+            3: "Dentro de este marco crítico, me integro en el equipo SGT_CR_SCIB_CS_REGULATORY_L1. Formamos parte de los Servicios Gestionados Tecnológicos del banco y estamos especializados en el soporte técnico de primer nivel (L1) para el control de riesgos técnicos y regulatorios, actuando de forma inmediata ante cualquier anomalía en las mallas de procesamiento.",
+            4: "Nuestras responsabilidades combinan la monitorización en tiempo real de mallas automatizadas de datos con un flujo de trabajo muy riguroso. Controlamos que las ventanas de transferencia financiera se respeten al milisegundo, detectamos anomalías preventivamente mediante el análisis sistemático de logs, y estructuramos manuales técnicos de soporte (Runbooks) para reducir el tiempo de resolución.",
+            5: "Para llevar a cabo esto de forma eficiente en los servidores del banco, utilizamos este ecosistema tecnológico real. En la primera captura vemos BMC Control-M, donde orquestamos y monitorizamos en tiempo real miles de procesos batch bancarios críticos. En la segunda captura podéis ver la terminal Linux con comandos Bash, donde inspeccionamos y filtramos rápidamente las trazas de logs para identificar cuellos de botella. Finalmente, empleamos consolas propietarias de Santander como la que os muestro, regulando flujos de transacciones bajo estrictas capas de confidencialidad financiera.",
+            6: "Como conclusión, esta primera experiencia profesional ha sido sumamente enriquecedora, consolidando mis capacidades analíticas en entornos bancarios complejos bajo el ADN de 42: el autoaprendizaje nativo y la resiliencia en situaciones de estrés en producción. Expreso mi agradecimiento a 42 Málaga, Alenia y Santander por su tutela y confianza, y quedo a entera disposición de la junta directiva para cualquier aclaración o pregunta. Muchas gracias."
+        };
+
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        const slideCounter = document.getElementById('slide-counter');
+        const speakerScript = document.getElementById('speaker-script');
+        const notesContainer = document.getElementById('notes-container');
+        const toggleNotesBtn = document.getElementById('toggle-notes');
+        const notesIcon = document.getElementById('notes-icon');
+
+        function showSlide(index) {
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    slide.classList.remove('slide-active');
+                    slide.classList.add('hidden');
+                }
+            }
+
+            const activeSlide = document.getElementById(`slide-${index}`);
+            if (activeSlide) {
+                activeSlide.classList.remove('hidden');
+                activeSlide.classList.add('slide-active');
+            }
+
+            slideCounter.innerHTML = `<span class="font-mono text-teal-600 font-bold">${index}</span> de <span class="font-mono text-slate-500 font-semibold">${totalSlides}</span>`;
+            speakerScript.textContent = scripts[index] || "Sin guion disponible para esta diapositiva.";
+            notesContainer.scrollTop = 0;
+        }
+
+        function next() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prev() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        document.getElementById('next-slide').addEventListener('click', next);
+        document.getElementById('prev-slide').addEventListener('click', prev);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                next();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prev();
+            }
+        });
+
+        let notesVisible = true;
+        toggleNotesBtn.addEventListener('click', () => {
+            notesVisible = !notesVisible;
+            if (notesVisible) {
+                notesContainer.classList.remove('h-0', 'p-0', 'border-none');
+                notesContainer.classList.add('h-36', 'p-3.5', 'border');
+                notesIcon.classList.remove('fa-chevron-down');
+                notesIcon.classList.add('fa-chevron-up');
+            } else {
+                notesContainer.classList.remove('h-36', 'p-3.5', 'border');
+                notesContainer.classList.add('h-0', 'p-0', 'border-none');
+                notesIcon.classList.remove('fa-chevron-up');
+                notesIcon.classList.add('fa-chevron-down');
+            }
+        });
+
+        // SOPORTE DE DESLIZAMIENTO GESTUAL (TOUCH SWIPE)
+        let touchstartX = 0;
+        let touchendX = 0;
+        const mainContainer = document.querySelector('main');
+
+        mainContainer.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
+
+        mainContainer.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            if (touchendX < touchstartX - 50) {
+                next();
+            }
+            if (touchendX > touchstartX + 50) {
+                prev();
+            }
+        }
+
+        // LÓGICA DEL VISOR MODAL DE IMÁGENES
+        function openImageModal(src, title) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalTitle = document.getElementById('modal-title');
+            if (modal && modalImg && modalTitle) {
+                modalImg.src = src;
+                modalTitle.textContent = title;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        // Configurar los eventos de clic en las imágenes de la diapositiva 5
+        document.querySelectorAll('#slide-5 img').forEach(img => {
+            img.addEventListener('click', () => {
+                const title = img.getAttribute('alt') || 'Previsualización del Entorno';
+                openImageModal(img.src, title);
+            });
+        });
+
+        // Configuración para cerrar el modal
+        const closeModalBtn = document.getElementById('close-modal');
+        const imageModal = document.getElementById('image-modal');
+        if (closeModalBtn && imageModal) {
+            closeModalBtn.addEventListener('click', () => {
+                imageModal.classList.add('hidden');
+                imageModal.classList.remove('flex');
+            });
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    imageModal.classList.add('hidden');
+                    imageModal.classList.remove('flex');
+                }
+            });
+        }
+
+        window.onload = function() {
+            showSlide(currentSlide);
+        };
+    </script>
+</body>
+</html>
